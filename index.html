@@ -78,7 +78,9 @@
         /* Component States */
         .sym-hidden { opacity: 0.1; }
         .sym-visible { opacity: 1; transition: opacity 0.5s; }
+        
         .led-glow { fill: #fbbf24; filter: drop-shadow(0 0 15px #fbbf24); transition: 0.3s; }
+        
         .led-explode {
             transform-origin: center;
             animation: explodePart 0.5s forwards;
@@ -196,11 +198,27 @@
                                 <symbol id="sym-res" viewBox="0 0 40 40"><path d="M0 20h5l3-5 5 10 5-10 5 10 5-10 3 5h4" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
                                 <symbol id="sym-led" viewBox="0 0 40 40"><path d="M5 20h10v-5l10 5-10 5v-5h-10z m15-5l5-5 m2 2l-5 5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
                             </defs>
+
                             <path id="wire-base" d="M 50 150 V 50 H 350 V 150 H 50" fill="none" stroke="#e5e7eb" stroke-width="4" stroke-linecap="round" />
+                            
                             <path id="current-path" class="circuit-path" d="M 50 150 V 50 H 350 V 150 H 50" fill="none" stroke="transparent" stroke-width="4" stroke-linecap="round" />
-                            <g id="slot-bat" class="text-black sym-hidden" transform="translate(30, 130) rotate(-90)"><rect width="40" height="40" fill="white"/><use href="#sym-bat" width="40" height="40" /><text x="50" y="25" class="text-[10px] fill-gray-500 font-bold" style="font-size:10px" id="label-bat">BAT</text></g>
-                            <g id="slot-res" class="text-black sym-hidden" transform="translate(180, 30)"><rect width="40" height="40" fill="white"/><use href="#sym-res" width="40" height="40" /></g>
-                            <g id="slot-led" class="text-black sym-hidden" transform="translate(330, 90) rotate(90)"><rect width="40" height="40" fill="white"/><use id="led-icon" href="#sym-led" width="40" height="40" /></g>
+
+                            <g id="slot-bat" class="text-black sym-hidden" transform="translate(30, 130) rotate(-90)">
+                                <rect width="40" height="40" fill="white"/>
+                                <use href="#sym-bat" width="40" height="40" />
+                                <text x="50" y="25" class="text-[10px] fill-gray-500 font-bold" style="font-size:10px" id="label-bat">BAT</text>
+                            </g>
+
+                            <g id="slot-res" class="text-black sym-hidden" transform="translate(180, 30)">
+                                <rect width="40" height="40" fill="white"/>
+                                <use href="#sym-res" width="40" height="40" />
+                            </g>
+
+                            <g id="slot-led" class="text-black sym-hidden" transform="translate(330, 90) rotate(90)">
+                                <rect width="40" height="40" fill="white"/>
+                                <use id="led-icon" href="#sym-led" width="40" height="40" />
+                            </g>
+                            
                             <text id="boom-text" x="300" y="100" class="text-6xl hidden">💥</text>
                         </svg>
                     </div>
@@ -234,7 +252,7 @@
 
         // --- PASTE FIREBASE KEYS HERE ---
         const firebaseConfig = {
-            apiKey: "AIzaSyBKi-0beZXYKkwomMw4rLryxzsspP4wf4Q",
+apiKey: "AIzaSyBKi-0beZXYKkwomMw4rLryxzsspP4wf4Q",
   authDomain: "the-volt-morph.firebaseapp.com",
   projectId: "the-volt-morph",
   storageBucket: "the-volt-morph.firebasestorage.app",
@@ -471,6 +489,8 @@
             document.getElementById('detail-article').innerHTML = currentDetail.longDesc;
             document.getElementById('buy-btn').href = currentDetail.buyLink;
             document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-a0').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
+            document.getElementById('quiz-a1').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
             switchView('detail');
         }
         function renderComponents() {
