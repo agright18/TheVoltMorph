@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Volt Morph | Cloud Connected</title>
+    <title>Volt Morph | Premium Engineering</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -25,10 +25,6 @@
                             '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
                             '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
                             '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
-                        },
-                        flash: {
-                            '0%, 100%': { opacity: 1 },
-                            '50%': { opacity: 0.5 }
                         }
                     }
                 }
@@ -62,9 +58,16 @@
         .marquee-track { display: inline-flex; gap: 1rem; animation: scroll 20s linear infinite; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         
-        .prose h3 { font-size: 1.25rem; font-weight: 800; margin-top: 1.5em; margin-bottom: 0.5em; color: #111; }
-        .prose p { margin-bottom: 1em; line-height: 1.7; color: #4b5563; }
-        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; color: #4b5563; }
+        /* ARTICLE TYPOGRAPHY */
+        .prose h3 { font-size: 1.5rem; font-weight: 800; margin-top: 2em; margin-bottom: 0.75em; color: #111; letter-spacing: -0.025em; }
+        .prose h4 { font-size: 1.1rem; font-weight: 700; margin-top: 1.5em; margin-bottom: 0.5em; color: #333; }
+        .prose p { margin-bottom: 1.5em; line-height: 1.8; color: #4b5563; font-size: 1.05rem; }
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.5em; color: #4b5563; }
+        .prose li { margin-bottom: 0.5em; }
+        .prose strong { color: #000; font-weight: 700; }
+        .prose .highlight-box { background: #f3f4f6; border-left: 4px solid #000; padding: 1.5rem; margin: 2rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        
+        /* NAVBAR */
         .nav-link { position: relative; }
         .nav-link::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -2px; left: 0; background: black; transition: 0.3s; }
         .nav-link:hover::after { width: 100%; }
@@ -77,9 +80,9 @@
 <body class="text-slate-900">
 
     <div id="slider-track" class="slider-wrapper">
-        <div class="slide"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80" alt="Tech 1"></div>
-        <div class="slide"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1600&q=80" alt="Tech 2"></div>
-        <div class="slide"><img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1600&q=80" alt="Tech 3"></div>
+        <div class="slide"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=80" alt="Tech 1"></div>
+        <div class="slide"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=80" alt="Tech 2"></div>
+        <div class="slide"><img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1920&q=80" alt="Tech 3"></div>
     </div>
 
     <div id="intro-overlay" class="fixed inset-0 z-[200] flex pointer-events-none">
@@ -93,8 +96,8 @@
 
     <div id="auth-container" class="fixed inset-0 z-[150] bg-white flex overflow-hidden">
         <div class="hidden lg:block w-1/2 h-full relative overflow-hidden bg-gray-100">
-            <img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1600&q=80" class="w-full h-full object-cover scale-110 login-img-anim">
-            <div class="absolute inset-0 bg-black/30"></div>
+            <img src="https://images.unsplash.com/photo-1580927752452-89d86da3fa0a?auto=format&fit=crop&w=1600&q=80" class="w-full h-full object-cover scale-110 login-img-anim">
+            <div class="absolute inset-0 bg-black/40"></div>
             <div class="absolute bottom-10 left-10 text-white">
                 <h2 class="text-4xl font-black tracking-tighter">DESIGN.</h2>
                 <h2 class="text-4xl font-black tracking-tighter">SIMULATE.</h2>
@@ -146,7 +149,7 @@
         <section id="home-view" class="section-active min-h-[100dvh] relative flex flex-col pt-24 pb-4 z-20 justify-between">
             <div class="h-10"></div>
             <div class="flex-1 flex flex-col justify-center items-center text-center px-4 md:px-6">
-                <div class="hero-anim inline-block mb-4 px-4 py-1.5 rounded-full border border-white/30 bg-black/30 backdrop-blur-md text-xs font-bold uppercase tracking-widest text-white opacity-0 translate-y-4">Server Connected</div>
+                <div class="hero-anim inline-block mb-4 px-4 py-1.5 rounded-full border border-white/30 bg-black/30 backdrop-blur-md text-xs font-bold uppercase tracking-widest text-white opacity-0 translate-y-4">System v2.5 Online</div>
                 <h1 class="hero-anim text-5xl md:text-8xl font-black tracking-tighter mb-6 leading-[0.9] opacity-0 translate-y-4 text-white drop-shadow-2xl">MORPH YOUR <br/> REALITY.</h1>
                 <button onclick="switchView('components')" class="hero-anim bg-white text-black px-10 py-4 rounded-full font-bold text-lg flex items-center gap-2 mx-auto hover:bg-gray-200 transition shadow-xl opacity-0 translate-y-4 hover:scale-105 mt-6">Start Building <i class="ph ph-arrow-right"></i></button>
             </div>
@@ -166,17 +169,21 @@
             <button onclick="switchView('components')" class="mb-6 flex items-center gap-2 text-gray-500 hover:text-black font-bold transition"><i class="ph ph-arrow-left text-lg"></i> Back to Library</button>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div class="lg:col-span-5">
-                    <div class="bg-gray-100 rounded-3xl overflow-hidden aspect-square relative border border-gray-200 mb-8 sticky top-32">
+                    <div class="bg-gray-100 rounded-3xl overflow-hidden aspect-square relative border border-gray-200 mb-8 sticky top-32 shadow-lg">
                         <img id="detail-img" src="" class="w-full h-full object-cover">
                     </div>
                 </div>
                 <div class="lg:col-span-7">
                     <span id="detail-type" class="text-sm font-bold text-gray-500 uppercase mb-2 block">Hardware</span>
                     <h1 id="detail-name" class="text-4xl md:text-5xl font-black mb-4 tracking-tight"></h1>
-                    <div class="flex gap-4 mb-10 pb-10 border-b border-gray-100">
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 mb-10 pb-10 border-b border-gray-100">
                         <button id="add-bench-btn" class="flex-1 bg-black text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition shadow-lg flex justify-center items-center gap-2"><i class="ph-fill ph-plus-circle"></i> Add to Lab</button>
-                        <button id="take-quiz-btn" class="flex-1 border-2 border-black text-black font-bold py-4 rounded-xl hover:bg-black hover:text-white transition">Take Quiz</button>
+                        <a id="buy-btn" href="#" target="_blank" class="flex-1 bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition shadow-lg flex justify-center items-center gap-2"><i class="ph-fill ph-shopping-cart"></i> Buy on RoboCraze</a>
                     </div>
+                    
+                    <button id="take-quiz-btn" class="w-full border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:border-black hover:text-black transition mb-8 flex justify-center items-center gap-2"><i class="ph-bold ph-exam"></i> Take Knowledge Quiz</button>
+
                     <div id="quiz-container" class="hidden bg-gray-50 p-6 rounded-2xl border border-gray-200 animate-fade-in-up mb-8">
                         <div class="flex justify-between items-center mb-4"><h3 class="font-black text-xl">System Check</h3><i class="ph ph-brain text-xl text-gray-400"></i></div>
                         <p id="quiz-q" class="mb-4 font-bold text-gray-700">Question?</p>
@@ -185,6 +192,7 @@
                             <button id="quiz-a1" class="w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium">B</button>
                         </div>
                     </div>
+
                     <div class="prose prose-lg text-gray-600 max-w-none">
                         <div class="flex items-center gap-2 mb-6"><span class="text-xs font-bold uppercase tracking-widest bg-gray-100 px-3 py-1 rounded text-gray-500" id="detail-source">Source: Engineering Daily</span></div>
                         <div id="detail-article"></div>
@@ -267,6 +275,7 @@
   storageBucket: "the-volt-morph.firebasestorage.app",
   messagingSenderId: "673443028562",
   appId: "1:673443028562:web:628ff90301dce331dd098b"
+
         };
 
         let db;
@@ -275,36 +284,162 @@
             db = getFirestore(app);
             console.log("Firebase initialized");
         } catch (e) {
-            console.error("Firebase keys missing. Please paste them in the code.");
+            console.error("Firebase keys missing.");
         }
 
-        // STATIC COMPONENT DATA (Kept local for speed, Bench/Stats are synced)
+        // COMPONENT DATA WITH FIXED IMAGES & LONG DESCRIPTIONS
         const components = [
-            { id: 'bat9', name: '9V Battery', type: 'Power', source: 'Power Daily', img: 'https://images.unsplash.com/photo-1603522340330-22e6b0542302?auto=format&fit=crop&w=500', 
-              longDesc: `<h3>High Voltage Potential</h3><p>The 9V battery is the standard for high-power portable projects. While an Arduino runs on 5V, it has a voltage regulator that can accept 9V and step it down safely. However, raw components like LEDs cannot handle 9V directly.</p><ul><li><strong>Capacity:</strong> Contains roughly 500mAh of energy.</li><li><strong>Use Case:</strong> Excellent for powering motors, solenoids, or the Arduino board via the DC jack.</li><li><strong>Danger Zone:</strong> Never connect a 9V battery directly to a 3.3V sensor or a standard LED. The component will overheat and likely explode or melt.</li></ul>`,
-              quiz: { q: 'What is the voltage of this battery?', a: ['9 Volts', '3 Volts'], correct: 0, points: 10 } },
-            { id: 'bat3', name: '3V Battery', type: 'Power', source: 'Maker Digest', img: 'https://images.unsplash.com/photo-1619665528658-0027f311c036?auto=format&fit=crop&w=500', 
-              longDesc: `<h3>Compact Energy</h3><p>The CR2032 coin cell is a lithium-based battery providing 3 Volts. It is low capacity but extremely stable and long-lasting for low-current applications.</p><ul><li><strong>Voltage:</strong> 3V steady output.</li><li><strong>Safety:</strong> Safe for single LEDs.</li></ul>`,
-              quiz: { q: 'Is this safe for a standard LED?', a: ['Yes', 'No, it explodes'], correct: 0, points: 10 } },
-            { id: 'led', name: 'LED Red', type: 'Output', source: 'Photonics Weekly', img: 'https://plus.unsplash.com/premium_photo-1677020084534-7a098867c458?auto=format&fit=crop&w=500', 
-              longDesc: `<h3>Digital Light</h3><p>Unlike old incandescent bulbs that burn a filament, LEDs move electrons through a semiconductor material to generate photons (light). They are efficient, cool to the touch, and instant.</p><h3>Polarity Matters</h3><p>An LED is a Diode, meaning electricity acts like a one-way street.</p><ul><li><strong>Anode (+):</strong> The longer leg. Connects to positive voltage.</li><li><strong>Cathode (-):</strong> The shorter leg. Connects to Ground (GND).</li></ul>`,
-              quiz: { q: 'What does LED stand for?', a: ['Light Emitting Diode', 'Low Energy Device'], correct: 0, points: 10 } },
-            { id: 'res', name: 'Resistor 220Ω', type: 'Control', source: 'Ohm Magazine', img: 'https://images.unsplash.com/photo-1555543451-ee3538fa8b7e?auto=format&fit=crop&w=500', 
-              longDesc: `<h3>The Gatekeeper of Current</h3><p>In the Volt Morph simulator, if you connect a battery to an LED without this component, you get an explosion. Why? Because electricity wants to flow infinitely fast. A resistor acts like a kink in a garden hose—it limits the flow of electrons to a safe level.</p><h3>The Physics</h3><p>Defined by <strong>Ohm’s Law</strong> (V = I x R).</p>`,
-              quiz: { q: 'What is the function of a resistor?', a: ['Limit Current', 'Store Energy'], correct: 0, points: 10 } },
-            { id: 'uno', name: 'Arduino Uno', type: 'Controller', source: 'Arduino Docs', img: 'https://images.unsplash.com/photo-1608569079207-e6f212239105?auto=format&fit=crop&w=500', 
-              longDesc: `<h3>The Brain of the Operation</h3><p>The Arduino Uno is the most popular development board in the world. It is not just a component; it is a mini-computer that bridges the gap between software code and hardware reality. At its heart lies the <strong>ATmega328P</strong>, an 8-bit microcontroller.</p>`,
-              quiz: { q: 'Is Arduino a microcontroller?', a: ['Yes', 'No'], correct: 0, points: 20 } },
-            { id: 'servo', name: 'Servo Motor', type: 'Motion', source: 'Robotics Daily', img: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&w=500', 
-              longDesc: `<h3>Precision Movement</h3><p>Standard motors spin continuously (like a fan). Servo motors are different—they rotate to a specific angle (e.g., 90 degrees) and hold that position with high torque.</p><h3>The Control Signal</h3><p>Servos use <strong>PWM</strong> (Pulse Width Modulation).</p>`,
-              quiz: { q: 'What controls a Servo?', a: ['PWM Signals', 'Direct DC'], correct: 0, points: 20 } }
+            { 
+                id: 'bat9', 
+                name: '9V Battery', 
+                type: 'Power', 
+                source: 'Power Daily', 
+                buyLink: 'https://robocraze.com/products/9v-hi-watt-battery?_pos=1&_psq=9v&_ss=e&_v=1.0',
+                img: 'https://images.unsplash.com/photo-1623944890987-2fb07185025d?auto=format&fit=crop&w=800&q=80', 
+                longDesc: `
+                    <h3>High Voltage Potential</h3>
+                    <p>The 9V battery is the heavy lifter of hobby electronics. Unlike standard AA batteries (1.5V), this rectangular powerhouse delivers 9 volts of potential energy. It is most commonly used to power the Arduino Uno through its DC jack or to drive higher-load components like DC motors.</p>
+                    
+                    <div class="highlight-box">
+                        <strong>Safety Warning:</strong> While 9V is safe for humans to touch, it is deadly for 3.3V and 5V electronics if connected directly without regulation. Connecting a 9V battery directly to an LED will cause it to burn out instantly.
+                    </div>
+
+                    <h3>Technical Specs</h3>
+                    <ul>
+                        <li><strong>Voltage:</strong> 9V Nominal</li>
+                        <li><strong>Chemistry:</strong> Alkaline or Lithium</li>
+                        <li><strong>Capacity:</strong> ~500mAh (Alkaline)</li>
+                        <li><strong>Connector:</strong> Snap Connector (Polarized)</li>
+                    </ul>
+
+                    <h3>Common Uses</h3>
+                    <p>You will find these batteries in smoke detectors, guitar pedals, and portable Arduino robots. When using it with Arduino, always plug it into the barrel jack or Vin pin, never the 5V pin directly.</p>
+                `,
+                quiz: { q: 'What happens if you connect 9V directly to an LED?', a: ['It glows brighter', 'It burns out instantly'], correct: 1, points: 10 } 
+            },
+            { 
+                id: 'bat3', 
+                name: '3V Battery (CR2032)', 
+                type: 'Power', 
+                source: 'Maker Digest', 
+                buyLink: 'https://robocraze.com/products/lithium-battery-cr2032-3v?_pos=1&_psq=cr2032&_ss=e&_v=1.0',
+                img: 'https://images.unsplash.com/photo-1619665528658-0027f311c036?auto=format&fit=crop&w=800&q=80', 
+                longDesc: `
+                    <h3>Compact Energy Source</h3>
+                    <p>The CR2032 is a lithium coin cell battery. The "2032" tells you its dimensions: 20mm diameter and 3.2mm height. It provides a steady 3 Volts and is famous for its long shelf life.</p>
+                    
+                    <h3>Why use it?</h3>
+                    <p>It is perfect for low-power applications like keeping the Real-Time Clock (RTC) on your computer motherboard running when the PC is off. In wearables, it powers small LEDs or Bluetooth beacons.</p>
+
+                    <h3>Internal Resistance</h3>
+                    <p>Unlike the 9V battery, the CR2032 has high internal resistance. This means it cannot release energy very quickly. This acts as a natural safety feature, often allowing you to connect a single LED directly to it without a resistor (though we still recommend using one!).</p>
+                `,
+                quiz: { q: 'What does the "32" in CR2032 stand for?', a: ['3.2mm Height', '32 Volts'], correct: 0, points: 10 } 
+            },
+            { 
+                id: 'led', 
+                name: 'Red LED (5mm)', 
+                type: 'Output', 
+                source: 'Photonics Weekly', 
+                buyLink: 'https://robocraze.com/products/red-led-5mm?_pos=1&_psq=red+led&_ss=e&_v=1.0',
+                img: 'https://images.unsplash.com/photo-1563507469796-0e31845a7b31?auto=format&fit=crop&w=800&q=80', 
+                longDesc: `
+                    <h3>The Light Emitting Diode</h3>
+                    <p>LEDs are the "Hello World" of electronics. Unlike incandescent bulbs that create light by heating a filament, LEDs create light by moving electrons through a semiconductor material. This process is called electroluminescence.</p>
+
+                    <h3>Identifying Terminals</h3>
+                    <p>Polarity is critical. If you plug it in backward, it blocks current (acting as an insulator).</p>
+                    <ul>
+                        <li><strong>Anode (+):</strong> The longer leg. Connect this to the positive voltage.</li>
+                        <li><strong>Cathode (-):</strong> The shorter leg (often near a flat spot on the rim). Connect this to Ground.</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong>The Forward Voltage:</strong> A Red LED typically needs about 1.8V to 2.2V to turn on. If you give it less, it stays dark. If you give it more without a resistor, it draws infinite current and dies.
+                    </div>
+                `,
+                quiz: { q: 'Which leg connects to Positive?', a: ['Long Leg (Anode)', 'Short Leg (Cathode)'], correct: 0, points: 10 } 
+            },
+            { 
+                id: 'res', 
+                name: 'Resistor (220Ω)', 
+                type: 'Control', 
+                source: 'Ohm Magazine', 
+                buyLink: 'https://robocraze.com/products/resistor-220-ohm-1-4-watt?_pos=1&_psq=220+ohm&_ss=e&_v=1.0',
+                img: 'https://images.unsplash.com/photo-1582138255953-b6c8eb5b62b0?auto=format&fit=crop&w=800&q=80', 
+                longDesc: `
+                    <h3>The Current Limiter</h3>
+                    <p>Think of electricity like water flowing through a pipe. A resistor is like a pinch in that pipe—it restricts the flow. In our Volt Morph simulator, the resistor is the hero that prevents the 9V battery from destroying the LED.</p>
+
+                    <h3>Reading the Bands</h3>
+                    <p>Resistors are too small to print numbers on, so we use colored bands. For a 220Ω resistor (standard for LEDs), the bands are:</p>
+                    <ul>
+                        <li><strong>Red:</strong> 2</li>
+                        <li><strong>Red:</strong> 2</li>
+                        <li><strong>Brown:</strong> x10 Multiplier</li>
+                        <li><strong>Gold:</strong> 5% Tolerance</li>
+                    </ul>
+
+                    <h3>Power Rating</h3>
+                    <p>Most hobby resistors are rated for 1/4 Watt. If you force too much current through them, they will heat up and smoke. Always use Ohm's Law (P = I²R) to check if your resistor can handle the load.</p>
+                `,
+                quiz: { q: 'What color bands represent 220 Ohms?', a: ['Red-Red-Brown', 'Orange-Orange-Brown'], correct: 0, points: 10 } 
+            },
+            { 
+                id: 'uno', 
+                name: 'Arduino Uno R3', 
+                type: 'Controller', 
+                source: 'Arduino Docs', 
+                buyLink: 'https://robocraze.com/products/arduino-uno-r3-smd-compatible-board?_pos=2&_psq=arduino+uno&_ss=e&_v=1.0',
+                img: 'https://images.unsplash.com/photo-1555543451-ee3538fa8b7e?auto=format&fit=crop&w=800&q=80', 
+                longDesc: `
+                    <h3>The Brain of the Operation</h3>
+                    <p>The Arduino Uno is a microcontroller board based on the ATmega328P. It is the bridge between software code and hardware reality. When you upload code to it, the chip physically toggles pins on and off to control the world.</p>
+
+                    <h3>Key Components</h3>
+                    <ul>
+                        <li><strong>Digital I/O Pins (0-13):</strong> Can be ON (5V) or OFF (0V). Pins with a '~' symbol also support PWM.</li>
+                        <li><strong>Analog Inputs (A0-A5):</strong> Can read voltages between 0V and 5V, converting them into a number between 0 and 1023.</li>
+                        <li><strong>USB Port:</strong> Used for uploading code and powering the board from a computer.</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong>Did you know?</strong> The "Uno" means "One" in Italian and was named to mark the release of Arduino Software (IDE) 1.0.
+                    </div>
+                `,
+                quiz: { q: 'How many analog pins does the Uno have?', a: ['6 (A0-A5)', '14 (0-13)'], correct: 0, points: 20 } 
+            },
+            { 
+                id: 'servo', 
+                name: 'Micro Servo (SG90)', 
+                type: 'Motion', 
+                source: 'Robotics Daily', 
+                buyLink: 'https://robocraze.com/products/sg90-9g-micro-servo-motor?_pos=1&_psq=sg90&_ss=e&_v=1.0',
+                img: 'https://images.unsplash.com/photo-1589254065878-42c9da997008?auto=format&fit=crop&w=800&q=80', 
+                longDesc: `
+                    <h3>Precision Motion Control</h3>
+                    <p>Standard DC motors spin round and round continuously. Servo motors are different—they rotate to a specific angle (usually between 0 and 180 degrees) and hold that position. This makes them perfect for robot arms, steering mechanisms, and camera gimbals.</p>
+
+                    <h3>How it Works (PWM)</h3>
+                    <p>The servo has three wires: Brown (GND), Red (5V), and Orange (Signal). You control it by sending electrical pulses:</p>
+                    <ul>
+                        <li><strong>1.0ms pulse:</strong> Move to 0 degrees.</li>
+                        <li><strong>1.5ms pulse:</strong> Move to 90 degrees (Center).</li>
+                        <li><strong>2.0ms pulse:</strong> Move to 180 degrees.</li>
+                    </ul>
+
+                    <h3>The Gears</h3>
+                    <p>Inside the blue box is a tiny DC motor connected to a set of gears. These gears slow down the motor speed but massively increase its torque (strength).</p>
+                `,
+                quiz: { q: 'What wire controls the servo position?', a: ['Orange (Signal)', 'Red (Power)'], correct: 0, points: 20 } 
+            }
         ];
 
         let currentDetail = null;
-        let currentUser = null; // Stores ID
-        let localBench = [];    // Local State
+        let currentUser = null; 
+        let localBench = [];    
 
-        // 1. INITIALIZE & CHECK LOGIN
+        // 1. INITIALIZE
         window.onload = async () => {
             renderMarquee();
             renderComponents();
@@ -313,7 +448,6 @@
             if(savedId && db) {
                 await performLogin(savedId, false);
             } else {
-                // Intro Animation
                 const tl = gsap.timeline();
                 tl.to("#door-left", { x: "-100%", duration: 1.5, ease: "power4.inOut", delay: 0.5 })
                   .to("#door-right", { x: "100%", duration: 1.5, ease: "power4.inOut" }, "<")
@@ -322,7 +456,6 @@
                   .to(".login-content-anim", { opacity: 1, y: 0, duration: 0.8 }, "-=1");
             }
 
-            // Bind Buttons (Since type=module creates isolated scope)
             document.getElementById('login-form-el').addEventListener('submit', handleLoginClick);
             document.getElementById('logout-btn').addEventListener('click', handleLogout);
             document.getElementById('add-bench-btn').addEventListener('click', addToBenchFromDetail);
@@ -333,48 +466,38 @@
             document.getElementById('quiz-a1').addEventListener('click', () => checkQuiz(1));
         };
 
-        // 2. AUTH LOGIC (FIRESTORE BASED)
+        // 2. AUTH
         async function handleLoginClick(e) {
             e.preventDefault();
             const name = document.getElementById('login-user').value.trim();
             if(!name) return;
-            
             document.getElementById('login-spinner').style.display = "block";
             document.getElementById('login-arrow').style.display = "none";
-            
             await performLogin(name, true);
         }
 
         async function performLogin(userId, isNew) {
             if(!db) { alert("Please configure Firebase keys in the code!"); return; }
-            const userRef = doc(db, "users", userId.toLowerCase()); // Use name as ID
-            
+            const userRef = doc(db, "users", userId.toLowerCase());
             try {
                 const docSnap = await getDoc(userRef);
-                
                 if (docSnap.exists()) {
-                    // Load existing
                     const data = docSnap.data();
                     localBench = data.bench || [];
                     updateUI(userId, data.score || 0, data.circuits || 0);
                 } else {
-                    // Create new
                     await setDoc(userRef, { name: userId, bench: [], score: 0, circuits: 0 });
                     localBench = [];
                     updateUI(userId, 0, 0);
                 }
-                
                 currentUser = userId.toLowerCase();
                 localStorage.setItem('voltMorphUser', currentUser);
-                
-                // Transition
                 gsap.to("#auth-container", { opacity: 0, duration: 0.5, onComplete: () => {
                    document.getElementById('auth-container').classList.add('hidden');
                    document.getElementById('main-app').classList.remove('hidden');
                    updateBenchUI();
                    switchView('home');
                 }});
-                
             } catch (err) {
                 console.error(err);
                 alert("Connection Error. Check Console.");
@@ -383,11 +506,7 @@
             }
         }
 
-        function handleLogout() {
-            localStorage.removeItem('voltMorphUser');
-            location.reload();
-        }
-
+        function handleLogout() { localStorage.removeItem('voltMorphUser'); location.reload(); }
         function updateUI(name, score, circuits) {
             document.getElementById('display-name').innerText = name;
             document.getElementById('user-initial').innerText = name.charAt(0).toUpperCase();
@@ -395,19 +514,14 @@
             document.getElementById('stat-circuits').innerText = circuits;
         }
 
-        // 3. WORKBENCH LOGIC (SYNCED)
+        // 3. WORKBENCH
         async function addToBenchFromDetail() {
             if(!currentUser) return;
             if(!currentDetail) return;
-            
-            // Optimistic UI Update
             localBench.push(currentDetail.id);
             updateBenchUI();
-            
-            // Fire & Forget Sync
             const userRef = doc(db, "users", currentUser);
             await updateDoc(userRef, { bench: arrayUnion(currentDetail.id) });
-            
             switchView('workbench');
         }
 
@@ -419,40 +533,27 @@
             await updateDoc(userRef, { bench: [] });
         }
 
-        // NOTE: We only store IDs in DB to save space, mapping back to objects here
         function updateBenchUI() {
             const list = document.getElementById('bench-list');
             document.getElementById('bench-badge').innerText = localBench.length;
             document.getElementById('bench-badge').classList.toggle('hidden', localBench.length === 0);
-            
             if(localBench.length === 0) { list.innerHTML = '<p class="text-gray-400 text-sm italic py-4 text-center">Bench Empty.</p>'; return; }
-            
-            // Map IDs back to full component objects
             const fullItems = localBench.map(id => components.find(c => c.id === id)).filter(Boolean);
-            
             list.innerHTML = fullItems.map((c, i) => `
                 <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-100 shadow-sm">
                     <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-white bg-cover bg-center border border-gray-200" style="background-image:url('${c.img}')"></div><span class="font-bold text-sm">${c.name}</span></div>
                     <button class="text-red-400 hover:text-red-600 w-8 h-8 flex items-center justify-center bg-white rounded-lg border border-gray-100 btn-remove" data-idx="${i}"><i class="ph-fill ph-trash"></i></button>
                 </div>
             `).join('');
-            
-            // Re-bind remove buttons dynamically
             document.querySelectorAll('.btn-remove').forEach(btn => {
                 btn.onclick = async (e) => {
                     const idx = e.currentTarget.dataset.idx;
-                    const idToRemove = localBench[idx];
                     localBench.splice(idx, 1);
                     updateBenchUI();
-                    // Sync
                     const userRef = doc(db, "users", currentUser);
-                    // arrayRemove removes ALL instances, so for a true workbench we usually just overwrite the whole array
-                    // to support duplicates. For simplicity here, we overwrite.
                     await updateDoc(userRef, { bench: localBench }); 
                 };
             });
-
-            // Reset Sim
             document.getElementById('bulb-svg').classList.remove('bulb-lit', 'bulb-dead', 'animate-shake');
             document.getElementById('explosion-effect').classList.add('hidden');
             document.getElementById('sim-status').innerText = "STANDBY";
@@ -463,31 +564,23 @@
             const bulb = document.getElementById('bulb-svg'); 
             const boom = document.getElementById('explosion-effect'); 
             const stat = document.getElementById('sim-status');
-            
             bulb.classList.remove('bulb-lit', 'bulb-dead', 'animate-shake'); 
             boom.classList.add('hidden');
-
             if(localBench.length === 0) { alert("Add components first!"); return; }
-            
-            // Logic Check
             const has9V = localBench.includes('bat9');
             const has3V = localBench.includes('bat3');
             const hasRes = localBench.includes('res');
-            
             if (has9V && !hasRes) { 
                 stat.innerText = "CRITICAL FAILURE"; 
                 stat.className = "font-bold text-red-600 animate-pulse"; 
                 bulb.classList.add('bulb-dead', 'animate-shake'); 
                 setTimeout(() => boom.classList.remove('hidden'), 200); 
-            } 
-            else if ((has9V && hasRes) || (has3V && !has9V)) { 
+            } else if ((has9V && hasRes) || (has3V && !has9V)) { 
                 stat.innerText = "OPERATIONAL"; 
                 stat.className = "font-bold text-green-600"; 
                 bulb.classList.add('bulb-lit'); 
                 incrementCircuitStat();
-            } 
-            else if (has3V && has9V) { alert("Error: Multiple power sources."); } 
-            else { stat.innerText = "NO POWER"; }
+            } else if (has3V && has9V) { alert("Error: Multiple power sources."); } else { stat.innerText = "NO POWER"; }
         }
 
         async function incrementCircuitStat() {
@@ -499,7 +592,7 @@
             document.getElementById('stat-circuits').innerText = newCount;
         }
 
-        // 4. QUIZ LOGIC (POINTS SYSTEM)
+        // 4. QUIZ
         function toggleQuiz() {
             document.getElementById('quiz-container').classList.remove('hidden');
             document.getElementById('quiz-q').innerText = currentDetail.quiz.q;
@@ -512,8 +605,6 @@
             if(idx === currentDetail.quiz.correct) {
                 alert(`Correct! +${currentDetail.quiz.points} Points`);
                 btns[idx].classList.add('bg-green-100', 'border-green-500');
-                
-                // Add Score to DB
                 if(currentUser) {
                     const userRef = doc(db, "users", currentUser);
                     const snap = await getDoc(userRef);
@@ -527,7 +618,7 @@
             }
         }
 
-        // VIEW HELPERS (Exported to window for HTML access if needed, but listeners attached above)
+        // VIEW HELPERS
         window.switchView = (view) => {
             window.scrollTo(0,0);
             ['home','components','detail','workbench','models','profile'].forEach(v => {
@@ -541,13 +632,20 @@
 
         window.openDetail = (id) => {
             currentDetail = components.find(c => c.id === id);
+              
+
+[Image of Red LED]
+ 
+
+[Image of Resistor]
+  
             document.getElementById('detail-img').src = currentDetail.img;
             document.getElementById('detail-type').innerText = currentDetail.type;
             document.getElementById('detail-name').innerText = currentDetail.name;
             document.getElementById('detail-source').innerText = "Source: " + currentDetail.source;
             document.getElementById('detail-article').innerHTML = currentDetail.longDesc;
+            document.getElementById('buy-btn').href = currentDetail.buyLink;
             document.getElementById('quiz-container').classList.add('hidden');
-            // Reset button styles
             document.getElementById('quiz-a0').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
             document.getElementById('quiz-a1').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
             switchView('detail');
