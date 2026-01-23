@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Volt Morph | Premium Engineering</title>
+    <title>Volt Morph | System Online</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -25,6 +25,10 @@
                             '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
                             '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
                             '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                        },
+                        flash: {
+                            '0%, 100%': { opacity: 1 },
+                            '50%': { opacity: 0.5 }
                         }
                     }
                 }
@@ -267,170 +271,71 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // --- PASTE YOUR FIREBASE CONFIG HERE ---
+        // --- PASTE YOUR KEYS HERE ---
         const firebaseConfig = {
-            apiKey: "AIzaSyBKi-0beZXYKkwomMw4rLryxzsspP4wf4Q",
+           apiKey: "AIzaSyBKi-0beZXYKkwomMw4rLryxzsspP4wf4Q",
   authDomain: "the-volt-morph.firebaseapp.com",
   projectId: "the-volt-morph",
   storageBucket: "the-volt-morph.firebasestorage.app",
   messagingSenderId: "673443028562",
   appId: "1:673443028562:web:628ff90301dce331dd098b"
-
         };
 
         let db;
         try {
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            console.log("Firebase initialized");
+            if(firebaseConfig.apiKey) {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                console.log("Firebase initialized");
+            } else {
+                console.warn("No API Key found. Firebase disabled.");
+            }
         } catch (e) {
-            console.error("Firebase keys missing.");
+            console.error("Firebase Init Error:", e);
         }
 
-        // COMPONENT DATA WITH FIXED IMAGES & LONG DESCRIPTIONS
+        // COMPONENT DATA
         const components = [
             { 
-                id: 'bat9', 
-                name: '9V Battery', 
-                type: 'Power', 
-                source: 'Power Daily', 
+                id: 'bat9', name: '9V Battery', type: 'Power', source: 'Power Daily', 
                 buyLink: 'https://robocraze.com/products/9v-hi-watt-battery?_pos=1&_psq=9v&_ss=e&_v=1.0',
                 img: 'https://images.unsplash.com/photo-1623944890987-2fb07185025d?auto=format&fit=crop&w=800&q=80', 
-                longDesc: `
-                    <h3>High Voltage Potential</h3>
-                    <p>The 9V battery is the heavy lifter of hobby electronics. Unlike standard AA batteries (1.5V), this rectangular powerhouse delivers 9 volts of potential energy. It is most commonly used to power the Arduino Uno through its DC jack or to drive higher-load components like DC motors.</p>
-                    
-                    <div class="highlight-box">
-                        <strong>Safety Warning:</strong> While 9V is safe for humans to touch, it is deadly for 3.3V and 5V electronics if connected directly without regulation. Connecting a 9V battery directly to an LED will cause it to burn out instantly.
-                    </div>
-
-                    <h3>Technical Specs</h3>
-                    <ul>
-                        <li><strong>Voltage:</strong> 9V Nominal</li>
-                        <li><strong>Chemistry:</strong> Alkaline or Lithium</li>
-                        <li><strong>Capacity:</strong> ~500mAh (Alkaline)</li>
-                        <li><strong>Connector:</strong> Snap Connector (Polarized)</li>
-                    </ul>
-
-                    <h3>Common Uses</h3>
-                    <p>You will find these batteries in smoke detectors, guitar pedals, and portable Arduino robots. When using it with Arduino, always plug it into the barrel jack or Vin pin, never the 5V pin directly.</p>
-                `,
+                longDesc: `<h3>High Voltage Potential</h3><p>The 9V battery is the heavy lifter of hobby electronics. Unlike standard AA batteries (1.5V), this rectangular powerhouse delivers 9 volts of potential energy. It is most commonly used to power the Arduino Uno through its DC jack or to drive higher-load components like DC motors.</p><div class="highlight-box"><strong>Safety Warning:</strong> While 9V is safe for humans to touch, it is deadly for 3.3V and 5V electronics if connected directly without regulation. Connecting a 9V battery directly to an LED will cause it to burn out instantly.</div><h3>Technical Specs</h3><ul><li><strong>Voltage:</strong> 9V Nominal</li><li><strong>Chemistry:</strong> Alkaline or Lithium</li><li><strong>Capacity:</strong> ~500mAh (Alkaline)</li><li><strong>Connector:</strong> Snap Connector (Polarized)</li></ul><h3>Common Uses</h3><p>You will find these batteries in smoke detectors, guitar pedals, and portable Arduino robots. When using it with Arduino, always plug it into the barrel jack or Vin pin, never the 5V pin directly.</p>`,
                 quiz: { q: 'What happens if you connect 9V directly to an LED?', a: ['It glows brighter', 'It burns out instantly'], correct: 1, points: 10 } 
             },
             { 
-                id: 'bat3', 
-                name: '3V Battery (CR2032)', 
-                type: 'Power', 
-                source: 'Maker Digest', 
+                id: 'bat3', name: '3V Battery (CR2032)', type: 'Power', source: 'Maker Digest', 
                 buyLink: 'https://robocraze.com/products/lithium-battery-cr2032-3v?_pos=1&_psq=cr2032&_ss=e&_v=1.0',
                 img: 'https://images.unsplash.com/photo-1619665528658-0027f311c036?auto=format&fit=crop&w=800&q=80', 
-                longDesc: `
-                    <h3>Compact Energy Source</h3>
-                    <p>The CR2032 is a lithium coin cell battery. The "2032" tells you its dimensions: 20mm diameter and 3.2mm height. It provides a steady 3 Volts and is famous for its long shelf life.</p>
-                    
-                    <h3>Why use it?</h3>
-                    <p>It is perfect for low-power applications like keeping the Real-Time Clock (RTC) on your computer motherboard running when the PC is off. In wearables, it powers small LEDs or Bluetooth beacons.</p>
-
-                    <h3>Internal Resistance</h3>
-                    <p>Unlike the 9V battery, the CR2032 has high internal resistance. This means it cannot release energy very quickly. This acts as a natural safety feature, often allowing you to connect a single LED directly to it without a resistor (though we still recommend using one!).</p>
-                `,
+                longDesc: `<h3>Compact Energy Source</h3><p>The CR2032 is a lithium coin cell battery. The "2032" tells you its dimensions: 20mm diameter and 3.2mm height. It provides a steady 3 Volts and is famous for its long shelf life.</p><h3>Why use it?</h3><p>It is perfect for low-power applications like keeping the Real-Time Clock (RTC) on your computer motherboard running when the PC is off. In wearables, it powers small LEDs or Bluetooth beacons.</p><h3>Internal Resistance</h3><p>Unlike the 9V battery, the CR2032 has high internal resistance. This means it cannot release energy very quickly. This acts as a natural safety feature, often allowing you to connect a single LED directly to it without a resistor (though we still recommend using one!).</p>`,
                 quiz: { q: 'What does the "32" in CR2032 stand for?', a: ['3.2mm Height', '32 Volts'], correct: 0, points: 10 } 
             },
             { 
-                id: 'led', 
-                name: 'Red LED (5mm)', 
-                type: 'Output', 
-                source: 'Photonics Weekly', 
+                id: 'led', name: 'Red LED (5mm)', type: 'Output', source: 'Photonics Weekly', 
                 buyLink: 'https://robocraze.com/products/red-led-5mm?_pos=1&_psq=red+led&_ss=e&_v=1.0',
                 img: 'https://images.unsplash.com/photo-1563507469796-0e31845a7b31?auto=format&fit=crop&w=800&q=80', 
-                longDesc: `
-                    <h3>The Light Emitting Diode</h3>
-                    <p>LEDs are the "Hello World" of electronics. Unlike incandescent bulbs that create light by heating a filament, LEDs create light by moving electrons through a semiconductor material. This process is called electroluminescence.</p>
-
-                    <h3>Identifying Terminals</h3>
-                    <p>Polarity is critical. If you plug it in backward, it blocks current (acting as an insulator).</p>
-                    <ul>
-                        <li><strong>Anode (+):</strong> The longer leg. Connect this to the positive voltage.</li>
-                        <li><strong>Cathode (-):</strong> The shorter leg (often near a flat spot on the rim). Connect this to Ground.</li>
-                    </ul>
-
-                    <div class="highlight-box">
-                        <strong>The Forward Voltage:</strong> A Red LED typically needs about 1.8V to 2.2V to turn on. If you give it less, it stays dark. If you give it more without a resistor, it draws infinite current and dies.
-                    </div>
-                `,
+                longDesc: `<h3>The Light Emitting Diode</h3><p>LEDs are the "Hello World" of electronics. Unlike incandescent bulbs that create light by heating a filament, LEDs create light by moving electrons through a semiconductor material. This process is called electroluminescence.</p><h3>Identifying Terminals</h3><p>Polarity is critical. If you plug it in backward, it blocks current (acting as an insulator).</p><ul><li><strong>Anode (+):</strong> The longer leg. Connect this to the positive voltage.</li><li><strong>Cathode (-):</strong> The shorter leg (often near a flat spot on the rim). Connect this to Ground.</li></ul><div class="highlight-box"><strong>The Forward Voltage:</strong> A Red LED typically needs about 1.8V to 2.2V to turn on. If you give it less, it stays dark. If you give it more without a resistor, it draws infinite current and dies.</div>`,
                 quiz: { q: 'Which leg connects to Positive?', a: ['Long Leg (Anode)', 'Short Leg (Cathode)'], correct: 0, points: 10 } 
             },
             { 
-                id: 'res', 
-                name: 'Resistor (220Ω)', 
-                type: 'Control', 
-                source: 'Ohm Magazine', 
+                id: 'res', name: 'Resistor (220Ω)', type: 'Control', source: 'Ohm Magazine', 
                 buyLink: 'https://robocraze.com/products/resistor-220-ohm-1-4-watt?_pos=1&_psq=220+ohm&_ss=e&_v=1.0',
                 img: 'https://images.unsplash.com/photo-1582138255953-b6c8eb5b62b0?auto=format&fit=crop&w=800&q=80', 
-                longDesc: `
-                    <h3>The Current Limiter</h3>
-                    <p>Think of electricity like water flowing through a pipe. A resistor is like a pinch in that pipe—it restricts the flow. In our Volt Morph simulator, the resistor is the hero that prevents the 9V battery from destroying the LED.</p>
-
-                    <h3>Reading the Bands</h3>
-                    <p>Resistors are too small to print numbers on, so we use colored bands. For a 220Ω resistor (standard for LEDs), the bands are:</p>
-                    <ul>
-                        <li><strong>Red:</strong> 2</li>
-                        <li><strong>Red:</strong> 2</li>
-                        <li><strong>Brown:</strong> x10 Multiplier</li>
-                        <li><strong>Gold:</strong> 5% Tolerance</li>
-                    </ul>
-
-                    <h3>Power Rating</h3>
-                    <p>Most hobby resistors are rated for 1/4 Watt. If you force too much current through them, they will heat up and smoke. Always use Ohm's Law (P = I²R) to check if your resistor can handle the load.</p>
-                `,
+                longDesc: `<h3>The Current Limiter</h3><p>Think of electricity like water flowing through a pipe. A resistor is like a pinch in that pipe—it restricts the flow. In our Volt Morph simulator, the resistor is the hero that prevents the 9V battery from destroying the LED.</p><h3>Reading the Bands</h3><p>Resistors are too small to print numbers on, so we use colored bands. For a 220Ω resistor (standard for LEDs), the bands are:</p><ul><li><strong>Red:</strong> 2</li><li><strong>Red:</strong> 2</li><li><strong>Brown:</strong> x10 Multiplier</li><li><strong>Gold:</strong> 5% Tolerance</li></ul><h3>Power Rating</h3><p>Most hobby resistors are rated for 1/4 Watt. If you force too much current through them, they will heat up and smoke. Always use Ohm's Law (P = I²R) to check if your resistor can handle the load.</p>`,
                 quiz: { q: 'What color bands represent 220 Ohms?', a: ['Red-Red-Brown', 'Orange-Orange-Brown'], correct: 0, points: 10 } 
             },
             { 
-                id: 'uno', 
-                name: 'Arduino Uno R3', 
-                type: 'Controller', 
-                source: 'Arduino Docs', 
+                id: 'uno', name: 'Arduino Uno R3', type: 'Controller', source: 'Arduino Docs', 
                 buyLink: 'https://robocraze.com/products/arduino-uno-r3-smd-compatible-board?_pos=2&_psq=arduino+uno&_ss=e&_v=1.0',
                 img: 'https://images.unsplash.com/photo-1555543451-ee3538fa8b7e?auto=format&fit=crop&w=800&q=80', 
-                longDesc: `
-                    <h3>The Brain of the Operation</h3>
-                    <p>The Arduino Uno is a microcontroller board based on the ATmega328P. It is the bridge between software code and hardware reality. When you upload code to it, the chip physically toggles pins on and off to control the world.</p>
-
-                    <h3>Key Components</h3>
-                    <ul>
-                        <li><strong>Digital I/O Pins (0-13):</strong> Can be ON (5V) or OFF (0V). Pins with a '~' symbol also support PWM.</li>
-                        <li><strong>Analog Inputs (A0-A5):</strong> Can read voltages between 0V and 5V, converting them into a number between 0 and 1023.</li>
-                        <li><strong>USB Port:</strong> Used for uploading code and powering the board from a computer.</li>
-                    </ul>
-
-                    <div class="highlight-box">
-                        <strong>Did you know?</strong> The "Uno" means "One" in Italian and was named to mark the release of Arduino Software (IDE) 1.0.
-                    </div>
-                `,
+                longDesc: `<h3>The Brain of the Operation</h3><p>The Arduino Uno is a microcontroller board based on the ATmega328P. It is the bridge between software code and hardware reality. When you upload code to it, the chip physically toggles pins on and off to control the world.</p><h3>Key Components</h3><ul><li><strong>Digital I/O Pins (0-13):</strong> Can be ON (5V) or OFF (0V). Pins with a '~' symbol also support PWM.</li><li><strong>Analog Inputs (A0-A5):</strong> Can read voltages between 0V and 5V, converting them into a number between 0 and 1023.</li><li><strong>USB Port:</strong> Used for uploading code and powering the board from a computer.</li></ul><div class="highlight-box"><strong>Did you know?</strong> The "Uno" means "One" in Italian and was named to mark the release of Arduino Software (IDE) 1.0.</div>`,
                 quiz: { q: 'How many analog pins does the Uno have?', a: ['6 (A0-A5)', '14 (0-13)'], correct: 0, points: 20 } 
             },
             { 
-                id: 'servo', 
-                name: 'Micro Servo (SG90)', 
-                type: 'Motion', 
-                source: 'Robotics Daily', 
+                id: 'servo', name: 'Micro Servo (SG90)', type: 'Motion', source: 'Robotics Daily', 
                 buyLink: 'https://robocraze.com/products/sg90-9g-micro-servo-motor?_pos=1&_psq=sg90&_ss=e&_v=1.0',
                 img: 'https://images.unsplash.com/photo-1589254065878-42c9da997008?auto=format&fit=crop&w=800&q=80', 
-                longDesc: `
-                    <h3>Precision Motion Control</h3>
-                    <p>Standard DC motors spin round and round continuously. Servo motors are different—they rotate to a specific angle (usually between 0 and 180 degrees) and hold that position. This makes them perfect for robot arms, steering mechanisms, and camera gimbals.</p>
-
-                    <h3>How it Works (PWM)</h3>
-                    <p>The servo has three wires: Brown (GND), Red (5V), and Orange (Signal). You control it by sending electrical pulses:</p>
-                    <ul>
-                        <li><strong>1.0ms pulse:</strong> Move to 0 degrees.</li>
-                        <li><strong>1.5ms pulse:</strong> Move to 90 degrees (Center).</li>
-                        <li><strong>2.0ms pulse:</strong> Move to 180 degrees.</li>
-                    </ul>
-
-                    <h3>The Gears</h3>
-                    <p>Inside the blue box is a tiny DC motor connected to a set of gears. These gears slow down the motor speed but massively increase its torque (strength).</p>
-                `,
+                longDesc: `<h3>Precision Motion Control</h3><p>Standard DC motors spin round and round continuously. Servo motors are different—they rotate to a specific angle (usually between 0 and 180 degrees) and hold that position. This makes them perfect for robot arms, steering mechanisms, and camera gimbals.</p><h3>How it Works (PWM)</h3><p>The servo has three wires: Brown (GND), Red (5V), and Orange (Signal). You control it by sending electrical pulses:</p><ul><li><strong>1.0ms pulse:</strong> Move to 0 degrees.</li><li><strong>1.5ms pulse:</strong> Move to 90 degrees (Center).</li><li><strong>2.0ms pulse:</strong> Move to 180 degrees.</li></ul><h3>The Gears</h3><p>Inside the blue box is a tiny DC motor connected to a set of gears. These gears slow down the motor speed but massively increase its torque (strength).</p>`,
                 quiz: { q: 'What wire controls the servo position?', a: ['Orange (Signal)', 'Red (Power)'], correct: 0, points: 20 } 
             }
         ];
@@ -439,15 +344,33 @@
         let currentUser = null; 
         let localBench = [];    
 
-        // 1. INITIALIZE
+        // 1. INITIALIZE (WITH SAFETY TIMEOUT)
         window.onload = async () => {
             renderMarquee();
             renderComponents();
             
+            // EMERGENCY DOOR OPENER (3s timeout)
+            setTimeout(() => {
+                const overlay = document.getElementById('intro-overlay');
+                if(overlay && overlay.style.display !== 'none') {
+                    console.warn("Force opening door due to slow connection.");
+                    gsap.to("#door-left", { x: "-100%", duration: 1 });
+                    gsap.to("#door-right", { x: "100%", duration: 1 });
+                    gsap.to("#intro-overlay", { display: "none", delay: 1 });
+                    if(!currentUser) {
+                        document.getElementById('auth-container').classList.remove('hidden');
+                        document.getElementById('main-app').classList.add('hidden');
+                    }
+                }
+            }, 3000);
+
+            // AUTO LOGIN ATTEMPT
             const savedId = localStorage.getItem('voltMorphUser');
             if(savedId && db) {
+                // Try to login, if fail -> catch block handles it
                 await performLogin(savedId, false);
             } else {
+                // Intro Animation
                 const tl = gsap.timeline();
                 tl.to("#door-left", { x: "-100%", duration: 1.5, ease: "power4.inOut", delay: 0.5 })
                   .to("#door-right", { x: "100%", duration: 1.5, ease: "power4.inOut" }, "<")
@@ -477,7 +400,11 @@
         }
 
         async function performLogin(userId, isNew) {
-            if(!db) { alert("Please configure Firebase keys in the code!"); return; }
+            if(!db) { 
+                alert("Missing Firebase Keys in Code!"); 
+                forceLogoutState();
+                return; 
+            }
             const userRef = doc(db, "users", userId.toLowerCase());
             try {
                 const docSnap = await getDoc(userRef);
@@ -492,6 +419,12 @@
                 }
                 currentUser = userId.toLowerCase();
                 localStorage.setItem('voltMorphUser', currentUser);
+                
+                // Success Transition
+                gsap.to("#door-left", { x: "-100%", duration: 1 }); // Ensure door is open
+                gsap.to("#door-right", { x: "100%", duration: 1 });
+                gsap.to("#intro-overlay", { display: "none" });
+                
                 gsap.to("#auth-container", { opacity: 0, duration: 0.5, onComplete: () => {
                    document.getElementById('auth-container').classList.add('hidden');
                    document.getElementById('main-app').classList.remove('hidden');
@@ -500,10 +433,21 @@
                 }});
             } catch (err) {
                 console.error(err);
-                alert("Connection Error. Check Console.");
-                document.getElementById('login-spinner').style.display = "none";
-                document.getElementById('login-arrow').style.display = "block";
+                alert("Connection Failed: Check Database Rules or Internet.");
+                forceLogoutState();
             }
+        }
+
+        function forceLogoutState() {
+            localStorage.removeItem('voltMorphUser');
+            document.getElementById('login-spinner').style.display = "none";
+            document.getElementById('login-arrow').style.display = "block";
+            // Open door to reveal login
+            gsap.to("#door-left", { x: "-100%", duration: 1 });
+            gsap.to("#door-right", { x: "100%", duration: 1 });
+            gsap.to("#intro-overlay", { display: "none" });
+            document.getElementById('auth-container').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
         }
 
         function handleLogout() { localStorage.removeItem('voltMorphUser'); location.reload(); }
@@ -632,13 +576,6 @@
 
         window.openDetail = (id) => {
             currentDetail = components.find(c => c.id === id);
-              
-
-[Image of Red LED]
- 
-
-[Image of Resistor]
-  
             document.getElementById('detail-img').src = currentDetail.img;
             document.getElementById('detail-type').innerText = currentDetail.type;
             document.getElementById('detail-name').innerText = currentDetail.name;
