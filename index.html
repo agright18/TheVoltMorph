@@ -17,6 +17,7 @@
                     colors: { brand: '#000000' },
                     animation: {
                         'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+                        'flash': 'flash 0.5s infinite'
                     },
                     keyframes: {
                         shake: {
@@ -24,6 +25,10 @@
                             '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
                             '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
                             '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                        },
+                        flash: {
+                            '0%, 100%': { opacity: 1 },
+                            '50%': { opacity: 0.5 }
                         }
                     }
                 }
@@ -473,6 +478,8 @@
             document.getElementById('detail-article').innerHTML = currentDetail.longDesc;
             document.getElementById('buy-btn').href = currentDetail.buyLink;
             document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-a0').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
+            document.getElementById('quiz-a1').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
             switchView('detail');
         }
         function renderComponents() {
@@ -491,4 +498,3 @@
     </script>
 </body>
 </html>
-
