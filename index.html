@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Volt Morph | Circuit Simulator</title>
+    <title>Volt Morph | Local System</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -17,6 +17,7 @@
                     colors: { brand: '#000000' },
                     animation: {
                         'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+                        'flash': 'flash 0.5s infinite'
                     },
                     keyframes: {
                         shake: {
@@ -24,6 +25,10 @@
                             '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
                             '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
                             '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                        },
+                        flash: {
+                            '0%, 100%': { opacity: 1 },
+                            '50%': { opacity: 0.5 }
                         }
                     }
                 }
@@ -73,9 +78,7 @@
         /* Component States */
         .sym-hidden { opacity: 0.1; }
         .sym-visible { opacity: 1; transition: opacity 0.5s; }
-        
         .led-glow { fill: #fbbf24; filter: drop-shadow(0 0 15px #fbbf24); transition: 0.3s; }
-        
         .led-explode {
             transform-origin: center;
             animation: explodePart 0.5s forwards;
@@ -86,6 +89,12 @@
             50% { transform: scale(1.5) rotate(15deg); fill: #ef4444; }
             100% { transform: scale(0) rotate(45deg); opacity: 0; }
         }
+        
+        /* ARTICLE TYPOGRAPHY */
+        .prose h3 { font-size: 1.5rem; font-weight: 800; margin-top: 2em; margin-bottom: 0.75em; color: #111; }
+        .prose p { margin-bottom: 1.5em; line-height: 1.8; color: #4b5563; }
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.5em; color: #4b5563; }
+        .prose .highlight-box { background: #f3f4f6; border-left: 4px solid #000; padding: 1.5rem; margin: 2rem 0; }
     </style>
 </head>
 <body class="text-slate-900">
@@ -103,7 +112,7 @@
         </div>
         <div class="w-full lg:w-1/2 h-full relative">
             <div id="login-form" class="absolute inset-0 flex items-center justify-center p-6 bg-white transition-opacity duration-500">
-                <div class="max-w-md w-full login-content-anim opacity-0 translate-y-4">
+                <div class="max-w-md w-full">
                     <div class="mb-10 text-center"><i class="ph-fill ph-lightning text-6xl mb-4"></i><h1 class="text-4xl font-black tracking-tight mb-2">Access Mainframe.</h1></div>
                     <form id="login-form-el" class="space-y-6">
                         <div><label class="block text-sm font-bold mb-2">Engineer Name</label><input id="login-user" type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-black outline-none" required placeholder="Ex: Neo"></div>
@@ -137,7 +146,7 @@
         <section id="home-view" class="section-active min-h-[100dvh] relative flex flex-col pt-24 pb-4 z-20 justify-between">
             <div class="h-10"></div>
             <div class="flex-1 flex flex-col justify-center items-center text-center px-4 md:px-6">
-                <div class="hero-anim inline-block mb-4 px-4 py-1.5 rounded-full border border-white/30 bg-black/30 backdrop-blur-md text-xs font-bold uppercase tracking-widest text-white opacity-0 translate-y-4">System v3.0</div>
+                <div class="hero-anim inline-block mb-4 px-4 py-1.5 rounded-full border border-white/30 bg-black/30 backdrop-blur-md text-xs font-bold uppercase tracking-widest text-white opacity-0 translate-y-4">System v3.0 (Local)</div>
                 <h1 class="hero-anim text-5xl md:text-8xl font-black tracking-tighter mb-6 leading-[0.9] opacity-0 translate-y-4 text-white drop-shadow-2xl">MORPH YOUR <br/> REALITY.</h1>
                 <button onclick="switchView('components')" class="hero-anim bg-white text-black px-10 py-4 rounded-full font-bold text-lg flex items-center gap-2 mx-auto hover:bg-gray-200 transition shadow-xl opacity-0 translate-y-4 hover:scale-105 mt-6">Start Building <i class="ph ph-arrow-right"></i></button>
             </div>
@@ -187,27 +196,11 @@
                                 <symbol id="sym-res" viewBox="0 0 40 40"><path d="M0 20h5l3-5 5 10 5-10 5 10 5-10 3 5h4" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
                                 <symbol id="sym-led" viewBox="0 0 40 40"><path d="M5 20h10v-5l10 5-10 5v-5h-10z m15-5l5-5 m2 2l-5 5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
                             </defs>
-
                             <path id="wire-base" d="M 50 150 V 50 H 350 V 150 H 50" fill="none" stroke="#e5e7eb" stroke-width="4" stroke-linecap="round" />
-                            
                             <path id="current-path" class="circuit-path" d="M 50 150 V 50 H 350 V 150 H 50" fill="none" stroke="transparent" stroke-width="4" stroke-linecap="round" />
-
-                            <g id="slot-bat" class="text-black sym-hidden" transform="translate(30, 130) rotate(-90)">
-                                <rect width="40" height="40" fill="white"/>
-                                <use href="#sym-bat" width="40" height="40" />
-                                <text x="50" y="25" class="text-[10px] fill-gray-500 font-bold" style="font-size:10px" id="label-bat">BAT</text>
-                            </g>
-
-                            <g id="slot-res" class="text-black sym-hidden" transform="translate(180, 30)">
-                                <rect width="40" height="40" fill="white"/>
-                                <use href="#sym-res" width="40" height="40" />
-                            </g>
-
-                            <g id="slot-led" class="text-black sym-hidden" transform="translate(330, 90) rotate(90)">
-                                <rect width="40" height="40" fill="white"/>
-                                <use id="led-icon" href="#sym-led" width="40" height="40" />
-                            </g>
-                            
+                            <g id="slot-bat" class="text-black sym-hidden" transform="translate(30, 130) rotate(-90)"><rect width="40" height="40" fill="white"/><use href="#sym-bat" width="40" height="40" /><text x="50" y="25" class="text-[10px] fill-gray-500 font-bold" style="font-size:10px" id="label-bat">BAT</text></g>
+                            <g id="slot-res" class="text-black sym-hidden" transform="translate(180, 30)"><rect width="40" height="40" fill="white"/><use href="#sym-res" width="40" height="40" /></g>
+                            <g id="slot-led" class="text-black sym-hidden" transform="translate(330, 90) rotate(90)"><rect width="40" height="40" fill="white"/><use id="led-icon" href="#sym-led" width="40" height="40" /></g>
                             <text id="boom-text" x="300" y="100" class="text-6xl hidden">💥</text>
                         </svg>
                     </div>
@@ -215,7 +208,7 @@
 
                 <div class="col-span-1 bg-white p-6 rounded-3xl border border-gray-200 h-fit shadow-lg">
                     <h3 class="font-bold mb-4 uppercase text-xs tracking-wider text-gray-400">Circuit Configuration</h3>
-                    <div id="bench-list" class="space-y-3 min-h-[100px]"><p class="text-gray-400 text-sm italic py-4 text-center">Loading Cloud Data...</p></div>
+                    <div id="bench-list" class="space-y-3 min-h-[100px]"><p class="text-gray-400 text-sm italic py-4 text-center">Loading Data...</p></div>
                     <hr class="my-6 border-gray-100">
                     <div class="space-y-3">
                         <button id="sim-btn" class="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition shadow-lg flex justify-center items-center gap-2"><i class="ph-fill ph-power"></i> ACTIVATE</button>
@@ -235,28 +228,8 @@
         </section>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-        // --- PASTE FIREBASE KEYS HERE ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyB4o9kYtxU5aW7oHGslWPILX5HH_4gJ8ho",
-  authDomain: "the-volt-morph-a2199.firebaseapp.com",
-  projectId: "the-volt-morph-a2199",
-  storageBucket: "the-volt-morph-a2199.firebasestorage.app",
-  messagingSenderId: "879338534828",
-  appId: "1:879338534828:web:4ca78bf98fee023f1d6c09"
-        };
-
-        let db;
-        try {
-            if(firebaseConfig.apiKey) {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-            }
-        } catch (e) { console.error(e); }
-
+    <script>
+        // COMPONENT DATA
         const components = [
             { id: 'bat9', name: '9V Battery', buyLink: 'https://robocraze.com/products/9v-hi-watt-battery?_pos=1&_psq=9v&_ss=e&_v=1.0', img: 'https://images.unsplash.com/photo-1623944890987-2fb07185025d?auto=format&fit=crop&w=800&q=80', type: 'Power', source: 'Power Daily', longDesc: `<h3>High Voltage</h3><p>Powerful 9V source. Requires regulation.</p>`, quiz: { q: 'Voltage?', a: ['9V', '1.5V'], correct: 0, points: 10 } },
             { id: 'bat3', name: '3V CR2032', buyLink: 'https://robocraze.com/products/lithium-battery-cr2032-3v?_pos=1&_psq=cr2032&_ss=e&_v=1.0', img: 'https://images.unsplash.com/photo-1619665528658-0027f311c036?auto=format&fit=crop&w=800&q=80', type: 'Power', source: 'Maker Digest', longDesc: `<h3>Coin Cell</h3><p>Low power 3V source.</p>`, quiz: { q: 'Voltage?', a: ['3V', '9V'], correct: 0, points: 10 } },
@@ -267,18 +240,31 @@
 
         let currentDetail, currentUser, localBench = [];
 
-        window.onload = async () => {
-            // Safety timeout
-            setTimeout(() => { if(!currentUser) { document.getElementById('intro-overlay').style.display='none'; document.getElementById('auth-container').classList.remove('hidden'); }}, 3000);
-            
-            const savedId = localStorage.getItem('voltMorphUser');
-            if(savedId && db) await performLogin(savedId, false);
-            else gsap.to("#intro-overlay", { display: "none", delay: 1.5 });
-
+        window.onload = () => {
+            renderMarquee();
             renderComponents();
             
+            // Check LocalStorage for Login
+            const savedUser = localStorage.getItem('voltMorphUser');
+            if(savedUser) {
+                currentUser = savedUser;
+                loadUserData();
+                document.getElementById('intro-overlay').style.display = 'none';
+                document.getElementById('auth-container').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                updateBenchUI();
+            } else {
+                // Intro Animation
+                const tl = gsap.timeline();
+                tl.to("#door-left", { x: "-100%", duration: 1.5, ease: "power4.inOut", delay: 0.5 })
+                  .to("#door-right", { x: "100%", duration: 1.5, ease: "power4.inOut" }, "<")
+                  .to("#intro-overlay", { display: "none" })
+                  .to(".login-img-anim", { scale: 1, duration: 2 }, "-=1.5")
+                  .to(".login-content-anim", { opacity: 1, y: 0, duration: 0.8 }, "-=1");
+            }
+
             // Listeners
-            document.getElementById('login-form-el').addEventListener('submit', handleLoginClick);
+            document.getElementById('login-form-el').addEventListener('submit', handleLogin);
             document.getElementById('logout-btn').addEventListener('click', handleLogout);
             document.getElementById('add-bench-btn').addEventListener('click', addToBench);
             document.getElementById('clear-bench-btn').addEventListener('click', clearBench);
@@ -289,60 +275,73 @@
         };
 
         // AUTH
-        async function handleLoginClick(e) {
+        function handleLogin(e) {
             e.preventDefault();
             const name = document.getElementById('login-user').value.trim();
             if(!name) return;
+            
+            // Mock Loading
             document.getElementById('login-spinner').style.display = "block";
-            await performLogin(name, true);
-        }
-
-        async function performLogin(userId, isNew) {
-            if(!db) { alert("Missing Firebase Keys"); return; }
-            const userRef = doc(db, "users", userId.toLowerCase());
-            try {
-                const docSnap = await getDoc(userRef);
-                if (docSnap.exists()) {
-                    const d = docSnap.data();
-                    localBench = d.bench || [];
-                    updateUI(userId, d.score||0, d.circuits||0);
-                } else {
-                    await setDoc(userRef, { name: userId, bench: [], score: 0, circuits: 0 });
-                    localBench = [];
-                    updateUI(userId, 0, 0);
-                }
-                currentUser = userId.toLowerCase();
-                localStorage.setItem('voltMorphUser', currentUser);
+            document.getElementById('login-arrow').style.display = "none";
+            
+            setTimeout(() => {
+                currentUser = name;
+                localStorage.setItem('voltMorphUser', name);
+                loadUserData(); // Initialize or Load stats
+                
                 gsap.to("#auth-container", { opacity: 0, onComplete: () => {
                    document.getElementById('auth-container').classList.add('hidden');
                    document.getElementById('main-app').classList.remove('hidden');
                    updateBenchUI();
                    switchView('home');
                 }});
-            } catch(e) { console.error(e); alert("Connection Failed"); localStorage.removeItem('voltMorphUser'); location.reload(); }
+            }, 1000);
         }
 
-        function updateUI(name, s, c) {
-            document.getElementById('display-name').innerText = name;
-            document.getElementById('user-initial').innerText = name[0].toUpperCase();
-            document.getElementById('stat-score').innerText = s;
-            document.getElementById('stat-circuits').innerText = c;
+        function loadUserData() {
+            // Try to get data object
+            let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
+            if(!data) {
+                // New User defaults
+                data = { bench: [], score: 0, circuits: 0 };
+                saveUserData(data);
+            }
+            localBench = data.bench;
+            document.getElementById('display-name').innerText = currentUser;
+            document.getElementById('user-initial').innerText = currentUser[0].toUpperCase();
+            document.getElementById('stat-score').innerText = data.score;
+            document.getElementById('stat-circuits').innerText = data.circuits;
         }
-        function handleLogout() { localStorage.removeItem('voltMorphUser'); location.reload(); }
+
+        function saveUserData(data) {
+            localStorage.setItem('voltData_' + currentUser, JSON.stringify(data));
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('voltMorphUser');
+            location.reload();
+        }
 
         // WORKBENCH & DIAGRAM
-        async function addToBench() {
+        function addToBench() {
             if(!currentDetail) return;
             localBench.push(currentDetail.id);
             updateBenchUI();
-            if(currentUser) await updateDoc(doc(db, "users", currentUser), { bench: arrayUnion(currentDetail.id) });
+            
+            // Save to LocalStorage
+            let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
+            data.bench = localBench;
+            saveUserData(data);
+            
             switchView('workbench');
         }
 
-        async function clearBench() {
+        function clearBench() {
             localBench = [];
             updateBenchUI();
-            if(currentUser) await updateDoc(doc(db, "users", currentUser), { bench: [] });
+            let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
+            data.bench = [];
+            saveUserData(data);
         }
 
         function updateBenchUI() {
@@ -359,10 +358,12 @@
                         <span class="font-bold text-sm">${c.name}</span>
                         <button class="text-red-500 btn-remove" data-idx="${i}"><i class="ph-fill ph-trash"></i></button>
                     </div>`).join('');
-                document.querySelectorAll('.btn-remove').forEach(b => b.onclick = async (e) => {
+                document.querySelectorAll('.btn-remove').forEach(b => b.onclick = (e) => {
                     localBench.splice(e.currentTarget.dataset.idx, 1);
                     updateBenchUI();
-                    if(currentUser) await updateDoc(doc(db, "users", currentUser), { bench: localBench });
+                    let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
+                    data.bench = localBench;
+                    saveUserData(data);
                 });
             }
 
@@ -423,11 +424,12 @@
                 stat.className = "font-bold text-green-600";
                 path.classList.add('flow-active');
                 led.classList.add('led-glow');
-                if(currentUser) {
-                    const r = doc(db, "users", currentUser);
-                    getDoc(r).then(s => updateDoc(r, { circuits: (s.data().circuits||0)+1 }));
-                    document.getElementById('stat-circuits').innerText = parseInt(document.getElementById('stat-circuits').innerText)+1;
-                }
+                
+                // Update Stats
+                let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
+                data.circuits = (data.circuits || 0) + 1;
+                saveUserData(data);
+                document.getElementById('stat-circuits').innerText = data.circuits;
             }
         }
 
@@ -438,19 +440,18 @@
             document.getElementById('quiz-a0').innerText = currentDetail.quiz.a[0];
             document.getElementById('quiz-a1').innerText = currentDetail.quiz.a[1];
         }
-        async function checkQuiz(idx) {
+        function checkQuiz(idx) {
             const btns = [document.getElementById('quiz-a0'), document.getElementById('quiz-a1')];
             if(idx === currentDetail.quiz.correct) {
                 alert(`Correct! +${currentDetail.quiz.points} Points`);
                 btns[idx].classList.add('bg-green-100');
-                if(currentUser) {
-                    const r = doc(db, "users", currentUser);
-                    getDoc(r).then(s => {
-                        const ns = (s.data().score||0) + currentDetail.quiz.points;
-                        updateDoc(r, { score: ns });
-                        document.getElementById('stat-score').innerText = ns;
-                    });
-                }
+                
+                // Update Stats
+                let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
+                data.score = (data.score || 0) + currentDetail.quiz.points;
+                saveUserData(data);
+                document.getElementById('stat-score').innerText = data.score;
+                
             } else { alert("Incorrect"); btns[idx].classList.add('bg-red-100'); }
         }
 
@@ -473,6 +474,8 @@
             document.getElementById('detail-article').innerHTML = currentDetail.longDesc;
             document.getElementById('buy-btn').href = currentDetail.buyLink;
             document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-a0').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
+            document.getElementById('quiz-a1').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
             switchView('detail');
         }
         function renderComponents() {
@@ -488,6 +491,7 @@
                     </div>
                 </div>`).join('');
         }
+        function renderMarquee() { document.getElementById('marquee-track').innerHTML = [...Array(3)].map(() => ['https://cdn.worldvectorlogo.com/logos/arduino-1.svg', 'https://cdn.worldvectorlogo.com/logos/raspberry-pi.svg', 'https://upload.wikimedia.org/wikipedia/commons/8/87/Arduino_Logo.svg'].map(src => `<div class="w-32 h-20 flex items-center justify-center mx-8"><img src="${src}" class="max-w-full max-h-full opacity-50 grayscale hover:grayscale-0 transition duration-300"></div>`).join('')).join(''); }
     </script>
 </body>
 </html>
