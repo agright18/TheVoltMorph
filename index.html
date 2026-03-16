@@ -2,496 +2,202 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Volt Morph | Local System</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { brand: '#000000' },
-                    animation: {
-                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
-                        'flash': 'flash 0.5s infinite'
-                    },
-                    keyframes: {
-                        shake: {
-                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
-                            '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
-                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
-                            '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
-                        },
-                        flash: {
-                            '0%, 100%': { opacity: 1 },
-                            '50%': { opacity: 0.5 }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volt Morph | Core Engine</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap');
+        body { margin: 0; overflow: hidden; background-color: #1e293b; font-family: 'Courier New', monospace; color: white; user-select: none; }
         
-        body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #fff; -webkit-tap-highlight-color: transparent; }
-        .section-hidden { display: none !important; }
-        .section-active { display: block !important; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* UI HELPERS */
-        .component-slot { border: 1px dashed #e5e7eb; transition: all 0.3s; }
-        .component-slot:hover { border-color: black; background: #f9fafb; }
-        .nav-link { position: relative; }
-        .nav-link::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -2px; left: 0; background: black; transition: 0.3s; }
-        .nav-link:hover::after { width: 100%; }
-        
-        /* LOADING SPINNER */
-        .spinner { border: 3px solid rgba(0,0,0,0.1); border-left-color: #000; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* --- CIRCUIT DIAGRAM ANIMATIONS --- */
-        .circuit-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke 0.3s; }
-        
-        /* Success: Flowing Yellow Current */
-        .flow-active {
-            animation: flow 2s linear infinite;
-            stroke: #fbbf24; /* Amber-400 */
-            filter: drop-shadow(0 0 5px #fbbf24);
-        }
-        @keyframes flow {
-            to { stroke-dashoffset: 0; }
+        /* The infinite grid background */
+        #workspace {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-image: radial-gradient(#475569 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
-        /* Failure: Fast Red Current */
-        .flow-danger {
-            animation: flow 0.5s linear forwards;
-            stroke: #ef4444; /* Red-500 */
-            filter: drop-shadow(0 0 8px #ef4444);
-        }
-
-        /* Component States */
-        .sym-hidden { opacity: 0.1; }
-        .sym-visible { opacity: 1; transition: opacity 0.5s; }
-        .led-glow { fill: #fbbf24; filter: drop-shadow(0 0 15px #fbbf24); transition: 0.3s; }
-        .led-explode {
-            transform-origin: center;
-            animation: explodePart 0.5s forwards;
-            fill: #1f2937;
-        }
-        @keyframes explodePart {
-            0% { transform: scale(1) rotate(0); }
-            50% { transform: scale(1.5) rotate(15deg); fill: #ef4444; }
-            100% { transform: scale(0) rotate(45deg); opacity: 0; }
+        /* The SVG layer that holds the wires */
+        #wire-layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; /* Let clicks pass through to components */
+            z-index: 10;
         }
         
-        /* ARTICLE TYPOGRAPHY */
-        .prose h3 { font-size: 1.5rem; font-weight: 800; margin-top: 2em; margin-bottom: 0.75em; color: #111; }
-        .prose p { margin-bottom: 1.5em; line-height: 1.8; color: #4b5563; }
-        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.5em; color: #4b5563; }
-        .prose .highlight-box { background: #f3f4f6; border-left: 4px solid #000; padding: 1.5rem; margin: 2rem 0; }
+        .wire { stroke: #3b82f6; stroke-width: 4; fill: none; stroke-linecap: round; }
+        .wire-temp { stroke: #ef4444; stroke-width: 4; stroke-dasharray: 5,5; fill: none; }
+
+        /* Component Styles */
+        .component {
+            position: absolute;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            padding: 15px 20px;
+            cursor: grab;
+            z-index: 20;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 100px;
+        }
+        .component:active { cursor: grabbing; border-color: #3b82f6; }
+
+        /* Pin Styles */
+        .pin {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #ef4444;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: crosshair;
+            z-index: 30;
+            transition: transform 0.1s;
+        }
+        .pin:hover { transform: scale(1.5); background: #22c55e; }
+        
+        /* Pin Positions */
+        .pin-out { right: -8px; top: 50%; transform: translateY(-50%); }
+        .pin-in { left: -8px; top: 50%; transform: translateY(-50%); }
     </style>
 </head>
-<body class="text-slate-900">
+<body>
 
-    <div id="intro-overlay" class="fixed inset-0 z-[200] flex pointer-events-none">
-        <div id="door-left" class="w-1/2 h-full bg-black flex items-center justify-end border-r border-gray-800 relative z-20"><span class="text-white text-3xl md:text-6xl font-black tracking-tighter mr-2 md:mr-4">VOLT</span></div>
-        <div id="door-right" class="w-1/2 h-full bg-black flex items-center justify-start relative z-20"><span class="text-white text-3xl md:text-6xl font-black tracking-tighter ml-2 md:ml-4">MORPH</span></div>
-    </div>
+    <div id="workspace">
+        <svg id="wire-layer"></svg>
 
-    <div id="auth-container" class="fixed inset-0 z-[150] bg-white flex overflow-hidden">
-        <div class="hidden lg:block w-1/2 h-full relative overflow-hidden bg-gray-100">
-            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1600&q=80" class="w-full h-full object-cover scale-110 login-img-anim">
-            <div class="absolute inset-0 bg-black/40"></div>
-            <div class="absolute bottom-10 left-10 text-white"><h2 class="text-4xl font-black tracking-tighter">DESIGN.</h2><h2 class="text-4xl font-black tracking-tighter">SIMULATE.</h2></div>
+        <div class="component" id="comp1" style="left: 150px; top: 200px;">
+            🔋 9V Battery
+            <div class="pin pin-out" id="pin-bat-pos" data-comp="comp1"></div>
         </div>
-        <div class="w-full lg:w-1/2 h-full relative">
-            <div id="login-form" class="absolute inset-0 flex items-center justify-center p-6 bg-white transition-opacity duration-500">
-                <div class="max-w-md w-full">
-                    <div class="mb-10 text-center"><i class="ph-fill ph-lightning text-6xl mb-4"></i><h1 class="text-4xl font-black tracking-tight mb-2">Access Mainframe.</h1></div>
-                    <form id="login-form-el" class="space-y-6">
-                        <div><label class="block text-sm font-bold mb-2">Engineer Name</label><input id="login-user" type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-black outline-none" required placeholder="Ex: Neo"></div>
-                        <button type="submit" id="login-btn" class="w-full bg-black text-white font-bold py-4 rounded-full hover:bg-gray-900 transition flex items-center justify-center gap-2"><span>Initialize</span> <div class="spinner" id="login-spinner"></div> <i class="ph ph-arrow-right" id="login-arrow"></i></button>
-                    </form>
-                </div>
-            </div>
+
+        <div class="component" id="comp2" style="left: 500px; top: 250px;">
+            <div class="pin pin-in" id="pin-led-anode" data-comp="comp2"></div>
+            💡 LED
         </div>
-    </div>
-
-    <div id="main-app" class="hidden">
-        <nav class="fixed top-0 w-full z-[100] bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300 h-20">
-            <div class="max-w-7xl mx-auto px-6 h-full flex justify-between items-center">
-                <div onclick="switchView('home')" class="cursor-pointer flex items-center gap-2 group h-full"><i class="ph-fill ph-lightning text-2xl"></i><span class="font-black tracking-tighter text-xl">VOLT<span class="text-gray-400">MORPH</span></span></div>
-                <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-500 h-full">
-                    <button onclick="switchView('home')" class="nav-link hover:text-black transition">Home</button>
-                    <button onclick="switchView('components')" class="nav-link hover:text-black transition">Components</button>
-                    <button onclick="switchView('models')" class="nav-link hover:text-black transition">Models</button>
-                </div>
-                <div class="flex items-center gap-6 h-full">
-                    <div class="relative cursor-pointer group flex items-center" onclick="switchView('workbench')">
-                        <span class="hidden md:block text-xs font-bold mr-2 uppercase tracking-wide text-gray-400 group-hover:text-black transition">Lab</span>
-                        <i class="ph ph-flask text-2xl hover:text-blue-600 transition"></i>
-                        <span id="bench-badge" class="absolute -top-1 -right-2 bg-black text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden border border-white">0</span>
-                    </div>
-                    <div onclick="switchView('profile')" class="cursor-pointer flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition"><i class="ph ph-user text-2xl"></i></div>
-                </div>
-            </div>
-        </nav>
-
-        <section id="home-view" class="section-active min-h-[100dvh] relative flex flex-col pt-24 pb-4 z-20 justify-between">
-            <div class="h-10"></div>
-            <div class="flex-1 flex flex-col justify-center items-center text-center px-4 md:px-6">
-                <div class="hero-anim inline-block mb-4 px-4 py-1.5 rounded-full border border-white/30 bg-black/30 backdrop-blur-md text-xs font-bold uppercase tracking-widest text-white opacity-0 translate-y-4">System v3.0 (Local)</div>
-                <h1 class="hero-anim text-5xl md:text-8xl font-black tracking-tighter mb-6 leading-[0.9] opacity-0 translate-y-4 text-white drop-shadow-2xl">MORPH YOUR <br/> REALITY.</h1>
-                <button onclick="switchView('components')" class="hero-anim bg-white text-black px-10 py-4 rounded-full font-bold text-lg flex items-center gap-2 mx-auto hover:bg-gray-200 transition shadow-xl opacity-0 translate-y-4 hover:scale-105 mt-6">Start Building <i class="ph ph-arrow-right"></i></button>
-            </div>
-        </section>
-
-        <section id="components-view" class="section-hidden min-h-screen pt-32 pb-20 px-4 md:px-6 max-w-7xl mx-auto bg-white relative z-40">
-            <h2 class="text-3xl md:text-4xl font-black mb-8">Component Library</h2>
-            <div id="component-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-        </section>
-
-        <section id="detail-view" class="section-hidden min-h-screen pt-32 pb-20 px-4 md:px-6 max-w-7xl mx-auto bg-white relative z-50">
-            <button onclick="switchView('components')" class="mb-6 flex items-center gap-2 text-gray-500 hover:text-black font-bold transition"><i class="ph ph-arrow-left text-lg"></i> Back</button>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                <div class="lg:col-span-5"><div class="bg-gray-100 rounded-3xl overflow-hidden aspect-square relative border border-gray-200 mb-8 sticky top-32 shadow-lg"><img id="detail-img" src="" class="w-full h-full object-cover"></div></div>
-                <div class="lg:col-span-7">
-                    <span id="detail-type" class="text-sm font-bold text-gray-500 uppercase mb-2 block">Hardware</span>
-                    <h1 id="detail-name" class="text-4xl md:text-5xl font-black mb-4 tracking-tight"></h1>
-                    <div class="flex flex-col sm:flex-row gap-4 mb-10 pb-10 border-b border-gray-100">
-                        <button id="add-bench-btn" class="flex-1 bg-black text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition shadow-lg flex justify-center items-center gap-2"><i class="ph-fill ph-plus-circle"></i> Add to Lab</button>
-                        <a id="buy-btn" href="#" target="_blank" class="flex-1 bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition shadow-lg flex justify-center items-center gap-2"><i class="ph-fill ph-shopping-cart"></i> Buy on RoboCraze</a>
-                    </div>
-                    <button id="take-quiz-btn" class="w-full border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:border-black hover:text-black transition mb-8 flex justify-center items-center gap-2"><i class="ph-bold ph-exam"></i> Take Quiz</button>
-                    <div id="quiz-container" class="hidden bg-gray-50 p-6 rounded-2xl border border-gray-200 animate-fade-in-up mb-8">
-                        <div class="flex justify-between items-center mb-4"><h3 class="font-black text-xl">System Check</h3></div>
-                        <p id="quiz-q" class="mb-4 font-bold text-gray-700">?</p>
-                        <div class="space-y-2"><button id="quiz-a0" class="w-full text-left p-4 bg-white rounded-xl border">A</button><button id="quiz-a1" class="w-full text-left p-4 bg-white rounded-xl border">B</button></div>
-                    </div>
-                    <div class="prose prose-lg text-gray-600 max-w-none"><div id="detail-article"></div></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="workbench-view" class="section-hidden min-h-screen pt-28 px-4 md:px-6 max-w-6xl mx-auto pb-20 bg-white relative z-40">
-            <div class="flex justify-between items-center mb-6">
-                <div><h2 class="text-3xl font-black">Volt Morph Lab</h2><p class="text-xs text-gray-400 uppercase tracking-widest font-bold">Simulator Active</p></div>
-                <button id="clear-bench-btn" class="text-red-500 font-bold text-sm bg-red-50 px-4 py-2 rounded-lg hover:bg-red-100 transition">Reset All</button>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="col-span-2 aspect-[4/3] bg-gray-50 rounded-3xl border-2 border-dashed border-gray-300 relative flex items-center justify-center overflow-hidden">
-                    <div class="absolute top-6 left-6 text-xs font-mono text-gray-400">STATUS: <span id="sim-status" class="font-bold text-black">STANDBY</span></div>
-                    
-                    <div class="relative w-full h-full p-10 flex items-center justify-center">
-                        <svg viewBox="0 0 400 300" class="w-full h-full max-w-lg">
-                            <defs>
-                                <symbol id="sym-bat" viewBox="0 0 40 40"><path d="M10 20h10m0-10v20m5-15v10m5 0h10" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
-                                <symbol id="sym-res" viewBox="0 0 40 40"><path d="M0 20h5l3-5 5 10 5-10 5 10 5-10 3 5h4" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
-                                <symbol id="sym-led" viewBox="0 0 40 40"><path d="M5 20h10v-5l10 5-10 5v-5h-10z m15-5l5-5 m2 2l-5 5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
-                            </defs>
-                            <path id="wire-base" d="M 50 150 V 50 H 350 V 150 H 50" fill="none" stroke="#e5e7eb" stroke-width="4" stroke-linecap="round" />
-                            <path id="current-path" class="circuit-path" d="M 50 150 V 50 H 350 V 150 H 50" fill="none" stroke="transparent" stroke-width="4" stroke-linecap="round" />
-                            <g id="slot-bat" class="text-black sym-hidden" transform="translate(30, 130) rotate(-90)"><rect width="40" height="40" fill="white"/><use href="#sym-bat" width="40" height="40" /><text x="50" y="25" class="text-[10px] fill-gray-500 font-bold" style="font-size:10px" id="label-bat">BAT</text></g>
-                            <g id="slot-res" class="text-black sym-hidden" transform="translate(180, 30)"><rect width="40" height="40" fill="white"/><use href="#sym-res" width="40" height="40" /></g>
-                            <g id="slot-led" class="text-black sym-hidden" transform="translate(330, 90) rotate(90)"><rect width="40" height="40" fill="white"/><use id="led-icon" href="#sym-led" width="40" height="40" /></g>
-                            <text id="boom-text" x="300" y="100" class="text-6xl hidden">💥</text>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="col-span-1 bg-white p-6 rounded-3xl border border-gray-200 h-fit shadow-lg">
-                    <h3 class="font-bold mb-4 uppercase text-xs tracking-wider text-gray-400">Circuit Configuration</h3>
-                    <div id="bench-list" class="space-y-3 min-h-[100px]"><p class="text-gray-400 text-sm italic py-4 text-center">Loading Data...</p></div>
-                    <hr class="my-6 border-gray-100">
-                    <div class="space-y-3">
-                        <button id="sim-btn" class="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition shadow-lg flex justify-center items-center gap-2"><i class="ph-fill ph-power"></i> ACTIVATE</button>
-                        <p class="text-[10px] text-center text-gray-400 leading-tight">Safety Warning: High voltage without resistance will cause catastrophic failure.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="models-view" class="section-hidden min-h-screen pt-32 pb-20 px-4 md:px-6 max-w-7xl mx-auto bg-white relative z-40">
-            <h2 class="text-3xl md:text-4xl font-black mb-2">Blueprints</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="bg-gray-50 p-8 rounded-3xl border border-gray-100"><h3 class="text-2xl font-black">Smart Street Light</h3><p class="text-gray-500">REQ: LDR, Resistor</p></div></div>
-        </section>
-
-        <section id="profile-view" class="section-hidden min-h-screen pt-28 px-4 md:px-6 max-w-5xl mx-auto pb-20 bg-white relative z-40">
-            <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden"><div class="h-40 bg-black"></div><div class="px-8 pb-8"><div class="absolute -top-12 left-8 w-24 h-24 rounded-2xl bg-white p-1 shadow-lg"><div class="w-full h-full bg-black text-white rounded-xl flex items-center justify-center text-4xl font-black"><span id="user-initial">U</span></div></div><div class="pt-16"><h2 id="display-name" class="text-3xl font-black">User</h2><button id="logout-btn" class="mt-4 text-red-600 font-bold border border-red-100 bg-red-50 px-6 py-3 rounded-xl">Sign Out</button></div></div></div>
-        </section>
     </div>
 
     <script>
-        // COMPONENT DATA
-        const components = [
-            { id: 'bat9', name: '9V Battery', buyLink: 'https://robocraze.com/products/9v-hi-watt-battery?_pos=1&_psq=9v&_ss=e&_v=1.0', img: 'https://images.unsplash.com/photo-1623944890987-2fb07185025d?auto=format&fit=crop&w=800&q=80', type: 'Power', source: 'Power Daily', longDesc: `<h3>High Voltage</h3><p>Powerful 9V source. Requires regulation.</p>`, quiz: { q: 'Voltage?', a: ['9V', '1.5V'], correct: 0, points: 10 } },
-            { id: 'bat3', name: '3V CR2032', buyLink: 'https://robocraze.com/products/lithium-battery-cr2032-3v?_pos=1&_psq=cr2032&_ss=e&_v=1.0', img: 'https://images.unsplash.com/photo-1619665528658-0027f311c036?auto=format&fit=crop&w=800&q=80', type: 'Power', source: 'Maker Digest', longDesc: `<h3>Coin Cell</h3><p>Low power 3V source.</p>`, quiz: { q: 'Voltage?', a: ['3V', '9V'], correct: 0, points: 10 } },
-            { id: 'led', name: 'Red LED', buyLink: 'https://robocraze.com/products/red-led-5mm?_pos=1&_psq=red+led&_ss=e&_v=1.0', img: 'https://images.unsplash.com/photo-1563507469796-0e31845a7b31?auto=format&fit=crop&w=800&q=80', type: 'Output', source: 'Photonics', longDesc: `<h3>Light Emitting Diode</h3><p>Polarized component.</p>`, quiz: { q: 'Long leg?', a: ['Anode', 'Cathode'], correct: 0, points: 10 } },
-            { id: 'res', name: 'Resistor 220Ω', buyLink: 'https://robocraze.com/products/resistor-220-ohm-1-4-watt?_pos=1&_psq=220+ohm&_ss=e&_v=1.0', img: 'https://images.unsplash.com/photo-1582138255953-b6c8eb5b62b0?auto=format&fit=crop&w=800&q=80', type: 'Control', source: 'Ohm Mag', longDesc: `<h3>Limiter</h3><p>Restricts current flow.</p>`, quiz: { q: 'Function?', a: ['Limit Current', 'Boost'], correct: 0, points: 10 } },
-            { id: 'uno', name: 'Arduino Uno', buyLink: 'https://robocraze.com/products/arduino-uno-r3-smd-compatible-board?_pos=2&_psq=arduino+uno&_ss=e&_v=1.0', img: 'https://images.unsplash.com/photo-1555543451-ee3538fa8b7e?auto=format&fit=crop&w=800&q=80', type: 'Controller', source: 'Docs', longDesc: `<h3>Logic</h3><p>Microcontroller board.</p>`, quiz: { q: 'Chip?', a: ['ATmega328P', 'Intel i9'], correct: 0, points: 10 } }
-        ];
-
-        let currentDetail, currentUser, localBench = [];
-
-        window.onload = () => {
-            renderMarquee();
-            renderComponents();
-            
-            // Check LocalStorage for Login
-            const savedUser = localStorage.getItem('voltMorphUser');
-            if(savedUser) {
-                currentUser = savedUser;
-                loadUserData();
-                document.getElementById('intro-overlay').style.display = 'none';
-                document.getElementById('auth-container').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                updateBenchUI();
-            } else {
-                // Intro Animation
-                const tl = gsap.timeline();
-                tl.to("#door-left", { x: "-100%", duration: 1.5, ease: "power4.inOut", delay: 0.5 })
-                  .to("#door-right", { x: "100%", duration: 1.5, ease: "power4.inOut" }, "<")
-                  .to("#intro-overlay", { display: "none" })
-                  .to(".login-img-anim", { scale: 1, duration: 2 }, "-=1.5")
-                  .to(".login-content-anim", { opacity: 1, y: 0, duration: 0.8 }, "-=1");
-            }
-
-            // Listeners
-            document.getElementById('login-form-el').addEventListener('submit', handleLogin);
-            document.getElementById('logout-btn').addEventListener('click', handleLogout);
-            document.getElementById('add-bench-btn').addEventListener('click', addToBench);
-            document.getElementById('clear-bench-btn').addEventListener('click', clearBench);
-            document.getElementById('sim-btn').addEventListener('click', runSimulation);
-            document.getElementById('take-quiz-btn').addEventListener('click', toggleQuiz);
-            document.getElementById('quiz-a0').addEventListener('click', () => checkQuiz(0));
-            document.getElementById('quiz-a1').addEventListener('click', () => checkQuiz(1));
+        // --- STATE MANAGEMENT ---
+        // This is where we store the actual "Graph" of the circuit
+        let components = {
+            'comp1': { el: document.getElementById('comp1'), x: 150, y: 200 },
+            'comp2': { el: document.getElementById('comp2'), x: 500, y: 250 }
         };
+        let wires = []; // Array to hold completed connections { fromPin, toPin }
 
-        // AUTH
-        function handleLogin(e) {
-            e.preventDefault();
-            const name = document.getElementById('login-user').value.trim();
-            if(!name) return;
-            
-            // Mock Loading
-            document.getElementById('login-spinner').style.display = "block";
-            document.getElementById('login-arrow').style.display = "none";
-            
-            setTimeout(() => {
-                currentUser = name;
-                localStorage.setItem('voltMorphUser', name);
-                loadUserData(); // Initialize or Load stats
+        // Interaction State
+        let draggedComp = null;
+        let dragOffset = { x: 0, y: 0 };
+        
+        let drawingWire = false;
+        let startPin = null;
+        let tempWirePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        tempWirePath.classList.add('wire-temp');
+
+        const wireLayer = document.getElementById('wire-layer');
+        const workspace = document.getElementById('workspace');
+
+        // --- 1. DRAG COMPONENTS LOGIC ---
+        document.querySelectorAll('.component').forEach(compEl => {
+            compEl.addEventListener('mousedown', (e) => {
+                // Ignore drag if we are clicking a pin
+                if(e.target.classList.contains('pin')) return;
                 
-                gsap.to("#auth-container", { opacity: 0, onComplete: () => {
-                   document.getElementById('auth-container').classList.add('hidden');
-                   document.getElementById('main-app').classList.remove('hidden');
-                   updateBenchUI();
-                   switchView('home');
-                }});
-            }, 1000);
-        }
-
-        function loadUserData() {
-            // Try to get data object
-            let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
-            if(!data) {
-                // New User defaults
-                data = { bench: [], score: 0, circuits: 0 };
-                saveUserData(data);
-            }
-            localBench = data.bench;
-            document.getElementById('display-name').innerText = currentUser;
-            document.getElementById('user-initial').innerText = currentUser[0].toUpperCase();
-            document.getElementById('stat-score').innerText = data.score;
-            document.getElementById('stat-circuits').innerText = data.circuits;
-        }
-
-        function saveUserData(data) {
-            localStorage.setItem('voltData_' + currentUser, JSON.stringify(data));
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('voltMorphUser');
-            location.reload();
-        }
-
-        // WORKBENCH & DIAGRAM
-        function addToBench() {
-            if(!currentDetail) return;
-            localBench.push(currentDetail.id);
-            updateBenchUI();
-            
-            // Save to LocalStorage
-            let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
-            data.bench = localBench;
-            saveUserData(data);
-            
-            switchView('workbench');
-        }
-
-        function clearBench() {
-            localBench = [];
-            updateBenchUI();
-            let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
-            data.bench = [];
-            saveUserData(data);
-        }
-
-        function updateBenchUI() {
-            const list = document.getElementById('bench-list');
-            document.getElementById('bench-badge').innerText = localBench.length;
-            document.getElementById('bench-badge').classList.toggle('hidden', localBench.length === 0);
-            
-            // 1. UPDATE SIDEBAR LIST
-            if(localBench.length === 0) list.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">Bench Empty</p>';
-            else {
-                const items = localBench.map(id => components.find(c => c.id === id)).filter(Boolean);
-                list.innerHTML = items.map((c,i) => `
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-100">
-                        <span class="font-bold text-sm">${c.name}</span>
-                        <button class="text-red-500 btn-remove" data-idx="${i}"><i class="ph-fill ph-trash"></i></button>
-                    </div>`).join('');
-                document.querySelectorAll('.btn-remove').forEach(b => b.onclick = (e) => {
-                    localBench.splice(e.currentTarget.dataset.idx, 1);
-                    updateBenchUI();
-                    let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
-                    data.bench = localBench;
-                    saveUserData(data);
-                });
-            }
-
-            // 2. UPDATE DIAGRAM SYMBOLS (VISUALS)
-            document.getElementById('slot-bat').classList.add('sym-hidden');
-            document.getElementById('slot-res').classList.add('sym-hidden');
-            document.getElementById('slot-led').classList.add('sym-hidden');
-            document.getElementById('boom-text').classList.add('hidden');
-            document.getElementById('current-path').classList.remove('flow-active', 'flow-danger');
-            document.getElementById('led-icon').classList.remove('led-glow', 'led-explode');
-            
-            const has9V = localBench.includes('bat9');
-            const has3V = localBench.includes('bat3');
-            const hasRes = localBench.includes('res');
-            const hasLED = localBench.includes('led');
-
-            if(has9V || has3V) {
-                document.getElementById('slot-bat').classList.remove('sym-hidden');
-                document.getElementById('label-bat').textContent = has9V ? "9V" : "3V";
-            }
-            if(hasRes) document.getElementById('slot-res').classList.remove('sym-hidden');
-            if(hasLED) document.getElementById('slot-led').classList.remove('sym-hidden');
-            
-            document.getElementById('sim-status').innerText = "READY";
-            document.getElementById('sim-status').className = "font-bold text-black";
-        }
-
-        function runSimulation() {
-            const path = document.getElementById('current-path');
-            const stat = document.getElementById('sim-status');
-            const led = document.getElementById('led-icon');
-            const boom = document.getElementById('boom-text');
-
-            if(localBench.length === 0) return alert("Empty Circuit!");
-
-            const has9V = localBench.includes('bat9');
-            const has3V = localBench.includes('bat3');
-            const hasRes = localBench.includes('res');
-            const hasLED = localBench.includes('led');
-
-            if(!hasLED) return alert("Add an LED to test!");
-            if(!has9V && !has3V) { stat.innerText = "NO POWER"; return; }
-            if(has9V && has3V) { alert("Mixed Power Error"); return; }
-
-            // SCENARIO 1: EXPLOSION (9V NO RESISTOR)
-            if(has9V && !hasRes) {
-                stat.innerText = "CRITICAL FAILURE";
-                stat.className = "font-bold text-red-600 animate-pulse";
-                path.classList.add('flow-danger');
-                setTimeout(() => {
-                    led.classList.add('led-explode');
-                    boom.classList.remove('hidden');
-                }, 400);
-            }
-            // SCENARIO 2: SUCCESS
-            else {
-                stat.innerText = "OPERATIONAL";
-                stat.className = "font-bold text-green-600";
-                path.classList.add('flow-active');
-                led.classList.add('led-glow');
-                
-                // Update Stats
-                let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
-                data.circuits = (data.circuits || 0) + 1;
-                saveUserData(data);
-                document.getElementById('stat-circuits').innerText = data.circuits;
-            }
-        }
-
-        // QUIZ
-        function toggleQuiz() {
-            document.getElementById('quiz-container').classList.remove('hidden');
-            document.getElementById('quiz-q').innerText = currentDetail.quiz.q;
-            document.getElementById('quiz-a0').innerText = currentDetail.quiz.a[0];
-            document.getElementById('quiz-a1').innerText = currentDetail.quiz.a[1];
-        }
-        function checkQuiz(idx) {
-            const btns = [document.getElementById('quiz-a0'), document.getElementById('quiz-a1')];
-            if(idx === currentDetail.quiz.correct) {
-                alert(`Correct! +${currentDetail.quiz.points} Points`);
-                btns[idx].classList.add('bg-green-100');
-                
-                // Update Stats
-                let data = JSON.parse(localStorage.getItem('voltData_' + currentUser));
-                data.score = (data.score || 0) + currentDetail.quiz.points;
-                saveUserData(data);
-                document.getElementById('stat-score').innerText = data.score;
-                
-            } else { alert("Incorrect"); btns[idx].classList.add('bg-red-100'); }
-        }
-
-        // HELPERS
-        window.switchView = (v) => {
-            window.scrollTo(0,0);
-            ['home','components','detail','workbench','models','profile'].forEach(id => {
-                document.getElementById(id+'-view').classList.add('section-hidden');
-                document.getElementById(id+'-view').classList.remove('section-active');
+                draggedComp = compEl.id;
+                const rect = compEl.getBoundingClientRect();
+                dragOffset.x = e.clientX - rect.left;
+                dragOffset.y = e.clientY - rect.top;
             });
-            document.getElementById(v+'-view').classList.remove('section-hidden');
-            document.getElementById(v+'-view').classList.add('section-active');
+        });
+
+        // --- 2. DRAW WIRE LOGIC ---
+        document.querySelectorAll('.pin').forEach(pinEl => {
+            pinEl.addEventListener('mousedown', (e) => {
+                e.stopPropagation(); // Don't drag the component
+                drawingWire = true;
+                startPin = pinEl;
+                wireLayer.appendChild(tempWirePath);
+                updateTempWire(e.clientX, e.clientY);
+            });
+
+            pinEl.addEventListener('mouseup', (e) => {
+                if (drawingWire && startPin && startPin.id !== pinEl.id) {
+                    // Create a permanent connection!
+                    wires.push({ from: startPin.id, to: pinEl.id });
+                    renderWires();
+                }
+            });
+        });
+
+        // --- 3. GLOBAL MOUSE EVENTS ---
+        document.addEventListener('mousemove', (e) => {
+            // Move Component
+            if (draggedComp) {
+                const comp = components[draggedComp];
+                comp.x = e.clientX - dragOffset.x;
+                comp.y = e.clientY - dragOffset.y;
+                comp.el.style.left = comp.x + 'px';
+                comp.el.style.top = comp.y + 'px';
+                renderWires(); // Redraw wires as it moves
+            }
+
+            // Draw Temporary Wire
+            if (drawingWire) {
+                updateTempWire(e.clientX, e.clientY);
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            draggedComp = null;
+            if (drawingWire) {
+                drawingWire = false;
+                startPin = null;
+                if(tempWirePath.parentNode) wireLayer.removeChild(tempWirePath);
+            }
+        });
+
+        // --- 4. RENDER ENGINE ---
+        
+        // Get exact center of a pin element
+        function getPinCoords(pinId) {
+            const pin = document.getElementById(pinId);
+            const rect = pin.getBoundingClientRect();
+            return { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
         }
-        window.openDetail = (id) => {
-            currentDetail = components.find(c => c.id === id);
-            document.getElementById('detail-img').src = currentDetail.img;
-            document.getElementById('detail-type').innerText = currentDetail.type;
-            document.getElementById('detail-name').innerText = currentDetail.name;
-            document.getElementById('detail-source').innerText = "Source: " + currentDetail.source;
-            document.getElementById('detail-article').innerHTML = currentDetail.longDesc;
-            document.getElementById('buy-btn').href = currentDetail.buyLink;
-            document.getElementById('quiz-container').classList.add('hidden');
-            document.getElementById('quiz-a0').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
-            document.getElementById('quiz-a1').className = "w-full text-left p-4 bg-white rounded-xl border hover:border-black transition text-sm font-medium";
-            switchView('detail');
+
+        // Draw a smooth curved line between two points
+        function generateBezierPath(x1, y1, x2, y2) {
+            const distance = Math.abs(x1 - x2) * 0.5; // Curvature strength
+            return `M ${x1} ${y1} C ${x1 + distance} ${y1}, ${x2 - distance} ${y2}, ${x2} ${y2}`;
         }
-        function renderComponents() {
-            document.getElementById('component-grid').innerHTML = components.map(c => `
-                <div class="group cursor-pointer" onclick="openDetail('${c.id}')">
-                    <div class="relative aspect-[4/3] bg-gray-50 rounded-3xl overflow-hidden mb-4 border border-gray-100 shadow-sm transition hover:shadow-lg">
-                        <img src="${c.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-                        <div class="absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">${c.type}</div>
-                    </div>
-                    <div class="flex justify-between items-center px-1">
-                        <div><h3 class="text-lg font-bold">${c.name}</h3><p class="text-xs text-gray-400 uppercase">Click to Learn</p></div>
-                        <div class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-black group-hover:text-white transition"><i class="ph ph-arrow-right"></i></div>
-                    </div>
-                </div>`).join('');
+
+        function updateTempWire(mouseX, mouseY) {
+            if (!startPin) return;
+            const start = getPinCoords(startPin.id);
+            tempWirePath.setAttribute('d', generateBezierPath(start.x, start.y, mouseX, mouseY));
         }
-        function renderMarquee() { document.getElementById('marquee-track').innerHTML = [...Array(3)].map(() => ['https://cdn.worldvectorlogo.com/logos/arduino-1.svg', 'https://cdn.worldvectorlogo.com/logos/raspberry-pi.svg', 'https://upload.wikimedia.org/wikipedia/commons/8/87/Arduino_Logo.svg'].map(src => `<div class="w-32 h-20 flex items-center justify-center mx-8"><img src="${src}" class="max-w-full max-h-full opacity-50 grayscale hover:grayscale-0 transition duration-300"></div>`).join('')).join(''); }
+
+        function renderWires() {
+            // Clear existing permanent wires
+            document.querySelectorAll('.wire').forEach(w => w.remove());
+
+            wires.forEach(wire => {
+                const start = getPinCoords(wire.from);
+                const end = getPinCoords(wire.to);
+                
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                path.classList.add('wire');
+                path.setAttribute('d', generateBezierPath(start.x, start.y, end.x, end.y));
+                wireLayer.appendChild(path);
+            });
+        }
+
+        // Initial render
+        renderWires();
     </script>
 </body>
 </html>
